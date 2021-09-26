@@ -1,0 +1,15 @@
+= infrastructure as code
+Nick Hardiman <nick@silvan.uk>
+:source-highlighter: highlight.js
+:revdate: 26-09-2021
+
+[NOTE]
+====
+These docs have nothing to do with any https://docs.ansible.com/[official Ansible docs].
+====
+
+
+== issues with these articles
+
+Something wrong? 
+Open an https://github.com/nickhardiman/articles-fedora-rpi4/issues[issue on GitHub].
