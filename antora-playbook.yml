@@ -1,5 +1,5 @@
 site:
-  title: Nick's Home Lab, hackity hack
+  title: Nick's Home Lab, whirrr chk chk chk
   url: https://infrastructure-as-code.netlify.app
   start_page: infrastructure-as-code:ROOT:index.adoc
   keys:

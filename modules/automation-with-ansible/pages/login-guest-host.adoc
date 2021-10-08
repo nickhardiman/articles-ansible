@@ -93,7 +93,8 @@ The ``ansible-galaxy`` command adds many more that we either don't need yet or w
 For instance, README.md is essential for sharing, but we are not sharing yet. 
 
 
-
+[source,shell]
+....
 ansible
 ├── ansible.cfg
 ├── ansible-target.yml
@@ -107,7 +108,7 @@ ansible
         │   └── main.yml
         └── templates
             └── sudoers
-
+....
 
 
 .ansible/ansible.cfg
