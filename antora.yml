@@ -4,6 +4,7 @@
 # The value cannot contain a space, a forward slash (/), or HTML special characters (&, <, or >). 
 # The value cannot be empty.
 name: infrastructure-as-code
+title: Infrastructure as Code
 
 # https://docs.antora.org/antora/2.3/component-name-and-version/#version-key
 # version:
