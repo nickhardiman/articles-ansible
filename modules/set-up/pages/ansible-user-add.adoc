@@ -1,13 +1,17 @@
-= set up an ansible user 
+= add an ansible user 
 Nick Hardiman 
 :source-highlighter: highlight.js
-:revdate: 01-06-2020
+:revdate: 12-10-2021
 
 
 Tell ansible to set up an account for SSH
 
 Create a remote account called ansible_user that ansible can use for SSH connections. 
 This account will be authenticated using a key pair, and will have passwordless sudo access.
+
+
+== for managed nodes only 
+
 This account is for the managed nodes only. 
 Don't set it up on the control node.
 
@@ -28,7 +32,7 @@ Don't set it up on the control node.
 .------------------------------------------------------.  
 ....
 
-We even set this account up on the host itself, so the _guest1_ control node can treat _host1_ like a managed node. 
+We even set this account up on the host machine, so the _guest1_ control node can treat _host1_ like a managed node. 
 The concept of a guest virtual machine making changes on the host physical machine seems a little weird. 
 But that's the way many provisioning systems work.  
 
@@ -58,8 +62,16 @@ In a shared environment, this DIY setup would be a headache.
 In production, it would be a disaster.
 But it's fine for this self-contained development environment. 
 
+A sysadmin can manually add a user to the managed host by running commands like `groupadd`, `useradd` and `ssh-copy-id`.
+This procedure uses an Ansible playbook to do the same work. 
+The playbook runs Ansible modules group, user, authorized_key, template and debug.
 
-== SSH from guest to host 
+Creating an account on one managed node using the Ansible way takes longer than the manual way. 
+The advantage is it's a repeatable process - ten sysadmins can use the playbook and all of them will get the same results. 
+Also, the playbook can be stored in git, which has IaC benefits like providing a permanent record of work done - someone can look at the playbook a year later and understand what was changed. 
+
+
+== check SSH from guest to host 
 
 Check access. 
 Use the address of the Internet gateway. 
@@ -82,16 +94,76 @@ Connection to 192.168.122.1 closed.
 [nick@guest1 ~]$
 ....
 
-== automate 
+== create a key pair 
 
-Create an ansible role using ``ansible-galaxy``.
+== create the ansible-target playbook 
+
+Create a directory named ansible. 
+
+Add a config file. 
+
+.ansible/ansible.cfg
+[source,ini]
+....
+[defaults]
+inventory=inventory
+....
+
+Add a playbook. 
+
+.ansible/ansible-target.yaml
+[source,yaml]
+....
+---
+- name: ansible-target test 
+  hosts: vm-host 
+  gather_facts: no
+  become: yes
+
+  roles:
+  - ansible-target
+....
+
+Add an inventory. 
+
+.ansible/inventory/inventory.yml 
+[source,yaml]
+....
+all:
+  children:
+    ungrouped:
+      hosts: 
+        vm-host: 
+          ansible_host: 192.168.122.1
+....
+
+[source,shell]
+....
+ansible
+├── ansible.cfg
+├── ansible-target.yml
+└── inventory
+    └── inventory.yml
+....
 
 
+== create the ansible-target role 
 
-Add content to half a dozen files. 
+Create an ansible role called _ansible-target_. 
+Use ``ansible-galaxy`` to create the framework, then add content to half a dozen files. 
+
+[source,shell]
+....
+[nick@guest1 ~]$ mkdir -p ansible/roles
+[nick@guest1 ~]$ mkdir inventory
+[nick@guest1 ~]$ cd ansible/roles/
+[nick@guest1 roles]$ ansible-galaxy init ansible-target
+- Role ansible-target was created successfully
+[nick@guest1 roles]$ 
+....
+
 The ``ansible-galaxy`` command adds many more that we either don't need yet or we will never need. 
 For instance, README.md is essential for sharing, but we are not sharing yet. 
-
 
 [source,shell]
 ....
@@ -110,50 +182,7 @@ ansible
             └── sudoers
 ....
 
-
-.ansible/ansible.cfg
-[source,ini]
-....
-[defaults]
-inventory=inventory
-....
-
-.ansible/ansible-target.yaml
-[source,yaml]
-....
----
-- name: ansible-target test 
-  hosts: vm-host 
-  gather_facts: no
-  become: yes
-
-  roles:
-  - ansible-target
-....
-
-.ansible/inventory/inventory.yml 
-[source,yaml]
-....
-all:
-  children:
-    ungrouped:
-      hosts: 
-        vm-host: 
-          ansible_host: 192.168.122.1
-....
-
-
-=== ansible-target role 
-
-[source,shell]
-....
-[nick@guest1 ~]$ mkdir -p ansible/roles
-[nick@guest1 ~]$ mkdir inventory
-[nick@guest1 ~]$ cd ansible/roles/
-[nick@guest1 roles]$ ansible-galaxy init ansible-target
-- Role ansible-target was created successfully
-[nick@guest1 roles]$ 
-....
+Add variables. 
 
 .ansible/roles/ansible-target/defaults/main.yml
 [source,yaml]
@@ -176,6 +205,8 @@ control_node_private_key: |
   3g7dlsvXNKssxzAAAAG25pY2tAZ3Vlc3QxLmxhYi5leGFtcGxlLmNvbQECAwQFBgc=
   -----END OPENSSH PRIVATE KEY-----
 ....
+
+Write tasks. 
 
 .ansible/roles/ansible-target/tasks/main.yml
 [source,yaml]
@@ -237,6 +268,7 @@ control_node_private_key: |
 == next steps 
 
 ansible-lint
+
 
 
 

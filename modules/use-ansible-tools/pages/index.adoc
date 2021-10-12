@@ -1,0 +1,6 @@
+= use ansible tools
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 12-10-2021
+
+Use ansible tools. 

@@ -1,0 +1,6 @@
+* xref:index.adoc[]
+** xref:prerequisites.adoc[]
+** xref:ansible-repo-enable.adoc[]
+** xref:ansible-rpm-install.adoc[]
+** xref:ansible-user-add.adoc[]
+

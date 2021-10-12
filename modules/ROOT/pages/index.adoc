@@ -46,6 +46,18 @@ image::asus-pn50.jpeg[hardware,width=600,title="ASUS PN50"]
 * application software - all included with a https://developers.redhat.com/[Developer Subscription]
 
 
+== Red Hat's management technology
+
+Red Hat supports many tools for automation and management.
+
+* https://www.redhat.com/en/technologies/management/ansible[Red Hat Ansible Automation Platform]
+* https://www.redhat.com/en/technologies/management/satellite[Red Hat Satellite]
+* https://www.redhat.com/en/technologies/management/insights[Red Hat Insights]
+
+https://www.ansible.com/products/engine[Ansible Engine] is one of Red Hat's products in the Automation Platform. Ansible Engine is an automation system, good for provisioning new systems and deploying applications. 
+Thousands of modules are included to manage Linux, Windows, on-premise network kit, off-premise cloud services, physical machines and virtual.
+
+
 == get in touch
 
 Something wrong? 

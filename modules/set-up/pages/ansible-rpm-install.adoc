@@ -1,0 +1,93 @@
+= install Ansible's RPM package
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 12-10-2021
+
+Install Red Hat Ansible Engine using your Red Hat Developer Subscription.
+
+Install this on the control node. 
+
+.ansible control and managed nodes  
+....
+.------------------------------------------------------.  
+|  host1                                               |
+|                                                      |
+|   +-------------------+       +-------------------+  |
+|   |  guest1           |       | guest2            |  |
+|   |   control node    | SSH   |   managed node    |  |
+|   |                   +------>|                   |  |
+|   +-------------------+       +-------------------+  |
+|                                                      |
+.------------------------------------------------------.  
+....
+
+
+== the ansible control node and managed nodes
+
+Ansible uses the idea of nodes. 
+Ansible uses one machine as the control node. 
+The control node has all the tools, libraries, playbooks, and so on. 
+The control node makes changes to other machines. 
+These are the managed nodes. 
+Ansible uses the word node instead of machine to keep things general. 
+A node is a point in a network that could be a general purpose computer, a network device or even a service API. 
+
+This procedure sets up one of the virtual machines - guest1 - as the control node. 
+The guest2 VM is managed by Ansible on guest1.
+
+
+
+== install ansible 
+
+Install ansible.
+
+[source,shell]
+----
+sudo dnf install ansible
+----
+
+Installing Ansible doesn't install Python. 
+RHEL 8 already has its own copy of Python (the executable is /usr/libexec/platform-python).
+Ansible uses the OS's python, not any python installed by the user. 
+
+Check your work by displaying the default configuration.
+
+[source,shell]
+----
+[nick@host1 ~]$ ansible --version
+ansible 2.9.9
+  config file = /etc/ansible/ansible.cfg
+  configured module search path = ['/home/nick/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/lib/python3.6/site-packages/ansible
+  executable location = /usr/bin/ansible
+  python version = 3.6.8 (default, Dec  5 2019, 15:45:45) [GCC 8.3.1 20191121 (Red Hat 8.3.1-5)]
+[nick@host1 ~]$ 
+----
+
+
+== examine the new system 
+
+This package adds a vast amount of files to the file system. 
+More than 10,000 files are related to modules, stored in /usr/lib/python3.6/site-packages/ansible/modules/. 
+Future versions of Ansible treat modules differently, to reduce this number. 
+
+[source,shell]
+----
+[nick@host1 ~]$ rpm -ql ansible | wc -l 
+17332
+[nick@host1 ~]$ 
+[nick@host1 ~]$ rpm -ql ansible
+/etc/ansible
+/etc/ansible/ansible.cfg
+/etc/ansible/hosts
+
+...(over 17,000 more)...
+
+/usr/share/man/man1/ansible-pull.1.gz
+/usr/share/man/man1/ansible-vault.1.gz
+/usr/share/man/man1/ansible.1.gz
+[nick@host1 ~]$ 
+----
+
+
+
