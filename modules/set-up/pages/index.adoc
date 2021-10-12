@@ -3,4 +3,27 @@ Nick Hardiman
 :source-highlighter: highlight.js
 :revdate: 12-10-2021
 
-Set up Ansible. 
+Set up Ansible Engine.
+
+
+== Red Hat Ansible Engine
+
+Like all Red Hat products, Red Hat Ansible Engine is the result of taking an upstream open source project and delivering an enterprise product. 
+The ridiculously busy https://github.com/ansible/ansible[upstream project] is, of course, Ansible.
+It's popular with pretty much everyone everywhere. 
+
+Red Hat make sure the Ansible Engine product is  enterprise-ready by improving stability, security and scalability, and https://access.redhat.com/support/policy/updates/ansible-engine[supporting the lifecycle]. Subscribed systems download errata updates from the Red Hat CDN, for the 
+https://access.redhat.com/support/policy/updates/ansible-engine[lifetime of Ansible Engine]. 
+
+
+== Ansible Engine and the developer subscription 
+
+The developer subscription provides Ansible Engine. If you run the command ``subscription-manager list --consumed`` on a registered system, you see _Red Hat Ansible Engine_ in the list of 50 products.
+
+https://access.redhat.com/products/red-hat-ansible-engine[Ansible Engine] is part of the 
+https://www.redhat.com/en/technologies/management/ansible[Red Hat Ansible Automation Platform].
+Your developer subscription does not entitle you to download other Automation Platform components, like Ansible Tower. For that, you need a Red Hat Ansible Automation Platform subscription.
+If you want to try the whole Automation Platform, you can https://www.redhat.com/en/technologies/management/ansible/try-it[sign up for a 60 day trial subscription] for free.
+
+The limited supported version of Ansible Engine is available in Red Hat's CDN (Content Delivery Network). 
+

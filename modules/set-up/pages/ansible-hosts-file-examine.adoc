@@ -1,4 +1,4 @@
-= add a host to the hosts file 
+= examine the hosts file 
 Nick Hardiman
 :source-highlighter: highlight.js
 :revdate: 17-03-2021

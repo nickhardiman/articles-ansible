@@ -1,0 +1,46 @@
+= use ansible-config
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 01-03-2021
+
+
+The ansible package installs a bunch of utilities in /usr/bin/. 
+
+
+== use ansible-config 
+
+Ansible sets roughly 200 variables. 
+
+[source,shell]
+----
+[nick@host1 ~]$ ansible-config dump
+ACTION_WARNINGS(default) = True
+AGNOSTIC_BECOME_PROMPT(default) = True
+ALLOW_WORLD_READABLE_TMPFILES(default) = False
+...
+VARIABLE_PRECEDENCE(default) = ['all_inventory', 'groups_inventory', 'all_plugins_inventory', 'all_plugins>
+VERBOSE_TO_STDERR(default) = False
+YAML_FILENAME_EXTENSIONS(default) = ['.yml', '.yaml', '.json']
+[nick@host1 ~]$ 
+----
+
+These are all default settings. 
+Nothing is defined in the config file /etc/ansible/ansible.cfg.
+It's an INI file containing nothing but headers, comments and blank lines. 
+
+[source,shell]
+----
+[nick@host1 ~]$ grep -v -E '^#|^$' /etc/ansible/ansible.cfg
+[defaults]
+[inventory]
+[privilege_escalation]
+[paramiko_connection]
+[ssh_connection]
+[persistent_connection]
+[accelerate]
+[selinux]
+[colors]
+[diff]
+[nick@host1 ~]$ 
+----
+

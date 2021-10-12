@@ -22,7 +22,10 @@ start_page: ROOT:index.adoc
 # Each value is a path to an individual navigation file, relative to the location of the antora.yml file.
 nav:
 - modules/set-up/nav.adoc 
-- modules/write-playbooks/nav.adoc 
+- modules/write-ansible-playbooks/nav.adoc 
+- modules/write-ansible-inventory/nav.adoc 
 - modules/use-ansible-modules/nav.adoc 
 - modules/use-ansible-tools/nav.adoc 
-- modules/automation-with-ansible/nav.adoc 
+- modules/use-ansible-plugins/nav.adoc 
+- modules/write-ansible-modules/nav.adoc 
+- modules/write-ansible-plugins/nav.adoc 

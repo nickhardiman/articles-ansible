@@ -1,0 +1,35 @@
+= use ansible-doc
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 01-03-2021
+
+
+The ansible package installs a bunch of utilities in /usr/bin/. 
+
+
+
+== use ansible-doc 
+
+The ansible-doc utility is like `man` for Ansible. 
+Read about a module, list included modules and show code snippet examples. 
+
+[source,shell]
+----
+[nick@host1 ~]$ ansible-doc -l
+a10_server                                                    Manage A10 Ne...
+a10_server_axapi3                                             Manage A10 Ne...
+a10_service_group                                             Manage A10 Ne...
+...
+zpool_facts                                                   Gather facts ...
+zypper                                                        Manage packag...
+zypper_repository                                             Add and remov...
+[nick@host1 ~]$ 
+[nick@host1 ~]$ ansible-doc ping
+
+> PING    (/usr/lib/python3.6/site-packages/ansible/modules/system/ping.py)
+
+        A trivial test module, this module always returns `pong' on successful
+        contact. It does not make sense in playbooks, but it is useful from
+...
+----
+

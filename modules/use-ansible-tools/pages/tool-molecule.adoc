@@ -1,25 +1,16 @@
-= ansible molecule
+= use molecule
 Nick Hardiman 
 :source-highlighter: highlight.js
 :revdate: 25-07-2020
 
-Configure, create, converge and destroy. 
-
+The molecule CLI tool is not part of the ansible RPM package.
 
 == prereqs 
 
 Python3, podman.
 ansible? or is venv ansible ok?
 
-[source,shell]
-----
-subscription-manager register
-subscription-manager attach --pool=1234567890abcdef1234567890abcdef
-dnf module install python36
-dnf module install container-tools
-#subscription-manager repos --enable=ansible-2-for-rhel-8-x86_64-rpms
-#dnf install ansible
-----
+
 
 The python virtual environment supplies other requirements like ansiblelint, yamllint and updated pip.
 

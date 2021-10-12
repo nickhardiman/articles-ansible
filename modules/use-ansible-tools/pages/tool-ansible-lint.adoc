@@ -1,16 +1,18 @@
-= use ansible lint 
+= use ansible-lint 
 Nick Hardiman
 :source-highlighter: highlight.js
 :revdate: 04-06-2020
 
 Use ansible-lint, a checker.
 
-This utility is not included in the ansible package.
+The _ansible-lint_ tool is not included in the _ansible_ RPM package, so it is not available.
+The first job is to install ansible-lint.
 
 
-== install 
 
-Install using pip. 
+== install with pip
+
+Install using Python's pip package manager. 
 The ansible-lint tool isn't available in a Red Hat repo, so you can't use _dnf_. 
 
 [source,shell]
@@ -20,10 +22,7 @@ source ansible-venv/bin/activate
 pip install --upgrade pip setuptools
 ----
 
-Don't install using platform-python. 
-In this case, you can get away with installing ansible-lint without doing damage to system python, by running the command ``sudo /usr/libexec/platform-python3.6 -m pip install ansible-lint``. But it's a bad habit. 
-
-
+These commands produce a lot of output.  
 
 [source,shell]
 ----

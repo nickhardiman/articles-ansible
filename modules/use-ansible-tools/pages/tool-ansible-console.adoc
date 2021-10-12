@@ -1,0 +1,30 @@
+= use ansible-console
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 01-03-2021
+
+
+The ansible package installs a bunch of utilities in /usr/bin/. 
+
+
+== use ansible-console 
+
+The _ansible-console_ utility provides a kind of shell environment.
+Some find it useful for interactive debugging. 
+
+[source,shell]
+----
+[nick@host1 ~]$ ansible-console localhost
+Welcome to the ansible console.
+Type help or ? to list commands.
+
+nick@localhost (1)[f:5]$ ping
+localhost | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+nick@localhost (1)[f:5]$ exit
+
+[nick@host1 ~]$ 
+----
+

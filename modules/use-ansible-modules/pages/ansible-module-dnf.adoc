@@ -1,4 +1,4 @@
-= install a DNF module 
+= use the dnf module to, er, install a DNF module 
 Nick Hardiman
 :source-highlighter: highlight.js
 :revdate: 04-06-2020

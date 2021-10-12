@@ -4,3 +4,37 @@ Nick Hardiman
 :revdate: 12-10-2021
 
 Use ansible tools. 
+
+The ansible package installs a bunch of utilities in /usr/bin/. 
+These are listed and the first few have examples. 
+
+
+== utilities 
+
+Each utility has its own page in the system administration manual. 
+Run `man ansible` to view the first one. 
+
+This is the Python script that helps users. 
+
+* https://docs.ansible.com/ansible/latest/cli/ansible.html[ansible] - run a task 
+
+These are aliases for the Ansible utility.
+In other words, they are symlinks to the Python script. 
+The script behaves differently depending on how it is called. 
+
+* ansible-config - view configuration 
+* https://docs.ansible.com/ansible/latest/cli/ansible-console.html[ansible-console] - run a task interactively, for debugging 
+* ansible-doc - 
+* ansible-galaxy
+* ansible-inventory
+* ansible-playbook
+* ansible-pull
+* ansible-vault
+
+This Python script is for Ansible to use, not people. It has no man page.
+
+* ansible-connection 
+
+For more information, see the user guide page  https://docs.ansible.com/ansible/latest/user_guide/command_line_tools.html[Working with command line tools].
+
+

@@ -1,0 +1,14 @@
+= examine platform-python 
+Nick Hardiman
+:source-highlighter: highlight.js
+:revdate: 12-10-2021
+
+
+
+== don't change platform-python
+
+The OS comes with its own copy of Python. 
+This is not meant for users.  
+If Python experts customize this copy, they could break system tools. 
+
+You can get away with installing some things without doing damage to system python. For instance, running the command ``sudo /usr/libexec/platform-python3.6 -m pip install ansible-lint`` would add a useful tool to your Ansible toolbox. But it's a bad habit. 
