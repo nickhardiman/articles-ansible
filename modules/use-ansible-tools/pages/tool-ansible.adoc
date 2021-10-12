@@ -1,10 +1,81 @@
-= use ansible modules 
+= use ansible 
 Nick Hardiman
 :source-highlighter: highlight.js
 :revdate: 16-03-2021
 
 
-ping, yum and unarchive 
+Use the command line tool _ansible_.
+
+* view facts 
+* run modules 
+
+
+== list hosts 
+
+A fresh install of Ansible has an empty inventory. 
+
+[source,shell]
+----
+[nick@guest1 ~]$ ansible all --list-hosts
+[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+  hosts (0):
+[nick@guest1 ~]$ 
+----
+
+[source,shell]
+----
+[nick@guest1 ~]$ cat inventory 
+host1
+host2
+host3
+[nick@guest1 ~]$ 
+[nick@guest1 ~]$ ansible all --list-hosts --inventory=./inventory
+  hosts (3):
+    host1
+    host2
+    host3
+[nick@guest1 ~]$ 
+----
+
+
+== list ansible_facts values 
+
+Use the setup module.
+
+[source,shell]
+----
+[nick@guest1 ~]$ ansible -m setup localhost
+localhost | SUCCESS => {
+    "ansible_facts": {
+        "ansible_all_ipv4_addresses": [
+
+...(hundreds of lines)...
+
+    "changed": false
+}
+[nick@guest1 ~]$ 
+----
+
+== list hostvars values
+
+Use the debug module and hostvars variable.
+
+[source,shell]
+----
+[nick@guest1 ~]$ ansible -m debug -a "var=hostvars[inventory_hostname]" localhost
+localhost | SUCCESS => {
+    "hostvars[inventory_hostname]": {
+        "ansible_check_mode": false,
+        "ansible_connection": "local",
+...
+        "omit": "__omit_place_holder__44dd304f61da8d90887d8b4002f67e9ac8408e4c",
+        "playbook_dir": "/home/nick"
+    }
+}
+[nick@guest1 ~]$ 
+----
+
+
 
 == check access to all hosts 
 

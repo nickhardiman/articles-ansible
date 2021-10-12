@@ -1,2 +1,4 @@
 * xref:index.adoc[]
+** xref:tool-ansible.adoc[]
+** xref:tool-ansible-playbook.adoc[]
 

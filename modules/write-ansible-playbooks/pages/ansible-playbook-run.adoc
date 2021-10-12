@@ -1,33 +1,11 @@
-= write an ansible playbook 
+= run the ping playbook 
 Nick Hardiman
 :source-highlighter: highlight.js
-:revdate: 17-03-2021
+:revdate: 12-10-2021
 
 
-ping 
 
-== ping
-
-Create a new playbook. 
-
-[source,shell]
-----
-[nick@host1 ~]$ cd ansible/
-[nick@host1 ansible]$ ls
-[nick@host1 ansible]$ vim ping-playbook.yml
-----
-
-Add this content. 
-
-[source,yaml]
-----
---- 
-- hosts: localhost
-  tasks:
-    - ping:
-----
-
-Run 
+= run ansible-playbook
 
 [source,shell]
 ----
@@ -49,12 +27,13 @@ localhost                  : ok=2    changed=0    unreachable=0    failed=0    s
 [nick@host1 ansible]$ 
 ----
 
+== understand the output
 
-The warning 
-No hosts in the hosts file 
+The output starts with the warning _No hosts in the hosts file_.
 
 [source,shell]
 ----
 [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
 ----
+
 

@@ -1,0 +1,4 @@
+* xref:index.adoc[]
+** xref:ansible-playbook-write.adoc[]
+** xref:ansible-playbook-run.adoc[]
+** xref:ansible-playbook-verbose.adoc[]
