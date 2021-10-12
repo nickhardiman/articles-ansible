@@ -15,6 +15,7 @@ title: Infrastructure as Code
 # The value cannot be empty.
 # To ensure portability between host platforms, letters used in the version value should be lowercase.
 version: 'dev'
+start_page: ROOT:index.adoc
 
 # https://docs.antora.org/antora/2.3/component-navigation/#nav-key
 # nav:
