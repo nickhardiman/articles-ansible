@@ -1,4 +1,4 @@
-= view debug messages
+= increase verbosity
 Nick Hardiman
 :source-highlighter: highlight.js
 :revdate: 17-03-2021

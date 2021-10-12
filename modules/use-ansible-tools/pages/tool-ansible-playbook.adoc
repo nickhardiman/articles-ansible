@@ -29,7 +29,7 @@ Add this content.
 ----
 
 
-= run ansible-playbook
+== run ansible-playbook
 
 [source,shell]
 ----
