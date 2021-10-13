@@ -28,14 +28,14 @@ Use a directory named _ansible_.
 [nick@host1 ansible]$ 
 ....
 
-Search the   
+Search Red Hat's    
 https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/performing_an_advanced_rhel_installation/kickstart-commands-and-options-reference_installing-rhel-as-an-experienced-user[list of commands] to find an explanation of each line. 
 
 Edit a new file. 
 
 [source,shell]
 ....
-[nick@host1 ansible]$ vim control
+[nick@host1 ansible]$ vim control.ks
 ....
 
 Add this content. 
@@ -45,7 +45,8 @@ There is one change to make, in a later step.
 [source,kickstart]
 ....
 # kickstart file for control.lab.example.com
-
+# for further information, see Appendix B. Kickstart commands and options reference
+# https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/performing_an_advanced_rhel_installation/kickstart-commands-and-options-reference_installing-rhel-as-an-experienced-user
 # install
 # don't use graphical install
 text
@@ -118,7 +119,7 @@ pwpolicy luks --minlen=6 --minquality=1 --notstrict --nochanges --notempty
 /usr/sbin/subscription-manager register --username=nick --password='some password!' 
 /usr/sbin/subscription-manager attach  --pool=123456789abcdef123456789abcdef12
 # package update
-ALL_PROXY=192.168.152.11:3128 /usr/bin/dnf -y update 
+/usr/bin/dnf -y update 
 %end
 ....
 
@@ -143,5 +144,17 @@ No news is good news.
 ....
 [root@host1 libvirt]# ksvalidator control.ks 
 [root@host1 libvirt]# 
+....
+
+This static code analyzer is handy for catching typos, like typing _%edn_ instead of _%end_.
+
+[source,shell]
+....
+[nick@host1 ansible]$ ksvalidator control.ks
+The following problem occurred on line 79 of the kickstart file:
+
+Section %post does not end with %end.
+
+[nick@host1 ansible]$ 
 ....
 
