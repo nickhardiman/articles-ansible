@@ -1,9 +1,10 @@
 * xref:index.adoc[]
 ** xref:prerequisites.adoc[]
 ** xref:ansible-repo-enable.adoc[]
+** xref:vm-control-kickstart.adoc[]
+** xref:vm-control-create.adoc[]
 ** xref:ansible-rpm-install.adoc[]
 ** xref:ansible-user-add.adoc[]
 ** xref:ansible-user-add-playbook.adoc[]
 ** xref:platform-python-examine.adoc[]
 ** xref:ansible-hosts-file-examine.adoc[]
-
