@@ -3,3 +3,4 @@
 ** xref:dev-python3-virtualenv.adoc[]
 ** xref:dev-python3-tools.adoc[]
 ** xref:dev-python3-ide.adoc[]
+** xref:dev-python3-lint.adoc[]

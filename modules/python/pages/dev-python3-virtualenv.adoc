@@ -1,25 +1,15 @@
-= python3 and virtualenv 
+= create a python virtualenv 
 Nick Hardiman 
 :source-highlighter: highlight.js
 :revdate: 29-05-2020
 
+Create a python virtual environment.
 
-How Python developers can go from nothing to virtualenv on RHEL8. 
-
+Python developers 
+https://packaging.python.org/tutorials/installing-packages/#creating-virtual-environments[create virtual environments] to keep their workspaces seperate. 
 
 You can create a virtual environment using the platform copy of Python, with the command ``/usr/libexec/platform-python3.6 -m venv my-project``. 
 But this is really meant for system use. 
-
-
-== Python and the developer subscription 
-
-. sign up for a developer account.
-. prepare your workstation
-. install RHEL 8
-. complete system registration and subscription 
-. install python 
-
-
 
 
 == create a python virtual environment 
@@ -32,26 +22,29 @@ python3.6 -m venv --system-site-packages myvirtual_venv
 selinux 
 ???
 
-Python developers 
-https://packaging.python.org/tutorials/installing-packages/#creating-virtual-environments[create virtual environments] to keep their workspaces seperate. 
+Run the command __python3 -m venv (new virtual environment)__. 
 
-There is a virtualenv command supplied by the RPM package ``python3-virtualenv``, but this package has some version baggage. Installing _python3-virtualenv_ enables the module _python36_, and this article doesn't use that. 
+There is a command-line tool called http://pypi.python.org/pypi/virtualenv[virtualenv] which does the same thing.
+This tool can be installed usng the RPM package ``python3-virtualenv``.
+This package has some version baggage - installing the package _python3-virtualenv_ enables the module _python36_. 
 
-Create a virtual environment using Python 3.8 and the venv module. 
+Create a virtual environment using Python 3 and the venv module. 
 
 [source,shell]
 ----
-[nick@guest1 ~]$ python3 -m venv new/virtual/environment
-[nick@guest1 ~]$
+[nick@control ~]$ python3 -m venv new/virtual/environment
+[nick@control ~]$ ls new/virtual/environment/
+bin  include  lib  lib64  pyvenv.cfg
+[nick@control ~]$ 
 ----
 
 This creates a new path with hundreds of files in it, including pip. 
 
 [source,shell]
 ----
-[nick@guest1 ~]$ new/virtual/environment/bin/pip --version
+[nick@control ~]$ new/virtual/environment/bin/pip --version
 pip 19.2.3 from /home/nick/new/virtual/environment/lib64/python3.8/site-packages/pip (python 3.8)
-[nick@guest1 ~]$ 
+[nick@control ~]$ 
 ----
 
 == use the python virtual environment 
@@ -61,11 +54,14 @@ Try running ``env`` and looking at the variables PATH, PS1 and  VIRTUAL_ENV.
 
 [source,shell]
 ----
-[nick@guest1 ~]$ source new/virtual/environment/bin/activate 
-(environment) [nick@guest1 ~]$ 
+[nick@control ~]$ source new/virtual/environment/bin/activate 
+(environment) [nick@control ~]$ 
 ----
 
 This developer environment is now in use. 
+
+
+== customize the virtual environment 
 
 * Upgrade packages. ``pip install --upgrade pip setuptools``
 * Install packages. ``pip install yamllint``
@@ -79,10 +75,10 @@ Remove the virtual environment.
 
 [source,shell]
 ----
-(environment) [nick@guest1 ~]$ deactivate
-[nick@guest1 ~]$ 
-[nick@guest1 ~]$ rm -r new
-[nick@guest1 ~]$ 
+(environment) [nick@control ~]$ deactivate
+[nick@control ~]$ 
+[nick@control ~]$ rm -r new
+[nick@control ~]$ 
 ----
 
 

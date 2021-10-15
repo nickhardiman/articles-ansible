@@ -1,0 +1,70 @@
+= check code with lint
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 29-05-2020
+
+Better to use https://flake8.pycqa.org/ than https://pylint.pycqa.org/?
+
+Use a static code analyzer to check code.
+A https://en.wikipedia.org/wiki/Lint_(software)[linter] catches programmatic problems and stylistic problems. 
+
+
+== install pylint 
+
+Use a virtual environment. 
+
+[source,shell]
+----
+[nick@control ~]$ source new/virtual/environment/bin/activate
+(environment) [nick@control ~]$ 
+----
+
+Install https://pypi.org/project/pylint/[pylint]. 
+
+[source,shell]
+----
+(environment) [nick@control ~]$ pip install pylint
+Collecting pylint
+  Downloading pylint-2.11.1-py3-none-any.whl (392 kB)
+     |████████████████████████████████| 392 kB 4.7 MB/s            
+...
+Successfully installed astroid-2.8.2 isort-5.9.3 lazy-object-proxy-1.6.0 mccabe-0.6.1 platformdirs-2.4.0 pylint-2.11.1 toml-0.10.2 typed-ast-1.4.3 typing-extensions-3.10.0.2 wrapt-1.12.1
+(environment) [nick@control ~]$ 
+----
+
+
+== write a script
+
+[source,shell]
+----
+(environment) [nick@control python]$ cat << EOF > hello.py
+> #!/usr/bin/env python3
+> print('hello')
+> EOF
+(environment) [nick@control python]$ 
+----
+
+[source,shell]
+----
+(environment) [nick@control python]$ chmod 754 ./hello.py 
+(environment) [nick@control python]$ ./hello.py 
+hello
+(environment) [nick@control python]$
+----
+
+== check the script 
+
+https://pylint.pycqa.org/en/latest/tutorial.html
+
+[source,shell]
+----
+(environment) [nick@control python]$ pylint ./hello.py 
+************* Module hello
+hello.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+
+-----------------------------------
+Your code has been rated at 0.00/10
+
+(environment) [nick@control python]$ 
+----
+

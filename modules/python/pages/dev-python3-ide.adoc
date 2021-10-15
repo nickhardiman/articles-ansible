@@ -4,7 +4,11 @@ Nick Hardiman
 :revdate: 12-10-2021
 
 Install http://www.vim.org/[VIM (VIsual editor iMproved)].
-That is already set up with syntax highlighting, automatic indentation, 
+That is already set up with syntax highlighting, automatic indentation, and a simple plugin loader. 
+
+This page is simple. For something much more complicated, read articles on the web like this one. 
+https://realpython.com/vim-and-python-a-match-made-in-heaven/[VIM and Python – A Match Made in Heaven].
+
 
 
 == install VIM 
