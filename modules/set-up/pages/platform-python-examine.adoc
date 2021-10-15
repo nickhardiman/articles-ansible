@@ -4,11 +4,50 @@ Nick Hardiman
 :revdate: 12-10-2021
 
 
+The default install of RHEL 8 
+https://developers.redhat.com/blog/2019/05/07/what-no-python-in-red-hat-enterprise-linux-8/[does not include Python 3]. 
+Or at least not an obvious copy. 
+RHEL 8 does include a copy of Python 3.6 for system tools. 
+The user is supposed to install another copy for their work. 
+
+
+== platform-python 
+
+The RHEL 8 OS includes its own copy of Python, called _platform-python_. 
+It's in the _libexec_ directory along with other system utilities. 
+Libexec files are meant to be used by the OS, not by people.
+Many system tools are written in Python, including anaconda, firewalld and subscription-manager.
+They all use _platform-python_.
+
+[source,shell]
+----
+[nick@guest1 ~]$ /usr/libexec/platform-python --version
+Python 3.6.8
+[nick@guest1 ~]$ 
+----
+
+Platform-python is provided by a few packages that were added by the installer, when the system was built. 
+Running ``rpm -qa | grep platform-python`` displays the package list. 
+
+Directory  ``/usr/lib/python3.6/site-packages/`` contains many Python modules. 
+These were also installed via RPM packages when the system was built. 
+There are dozens of these packages, from ``python3-asn1crypto`` to ``python3-urllib3``.
+https://fedoraproject.org/wiki/DNF[DNF] history shows the package list. 
+
+
+[source,shell]
+----
+[nick@guest1 ~]# sudo dnf history info 1 | grep python
+    Install python3-asn1crypto-0.24.0-3.el8.noarch                                    @anaconda
+    Install python3-audit-3.0-0.17.20191104git1c2f876.el8.x86_64                      @anaconda
+    Install python3-cffi-1.11.5-5.el8.x86_64                                          @anaconda
+...
+----
+
 
 == don't change platform-python
 
-The OS comes with its own copy of Python. 
-This is not meant for users.  
+The platform-python application is not meant for users.  
 If Python experts customize this copy, they could break system tools. 
 
 You can get away with installing some things without doing damage to system python. For instance, running the command ``sudo /usr/libexec/platform-python3.6 -m pip install ansible-lint`` would add a useful tool to your Ansible toolbox. But it's a bad habit. 

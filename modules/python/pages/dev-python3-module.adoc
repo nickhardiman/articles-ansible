@@ -18,41 +18,6 @@ Developer environments are often broken.
 If you break the system's python, you break some system tools too.
 
 
-== Python and the developer subscription 
-
-If you have already carried out these steps, you're ready to download Ansible Engine. 
-You are covered for personal use. 
-
-. sign up for a developer account.
-. prepare your workstation
-. install RHEL 8
-. complete system registration and subscription  
-
-The default install of RHEL 8 
-https://developers.redhat.com/blog/2019/05/07/what-no-python-in-red-hat-enterprise-linux-8/[does not include Python 3]. 
-Or at least not an obvious copy. 
-RHEL 8 does include a copy of Python 3.6 for system tools. 
-The user is supposed to install another copy for their work. 
-
-
-== don't use platform-python 
-
-The RHEL 8 OS includes its own copy of Python, called _platform-python_. 
-It's in the _libexec_ directory along with other system utilities. 
-Libexec files are meant to be used by the OS, not by people.
-Many system tools are written in Python, including anaconda, firewalld and subscription-manager.
-They all use _platform-python_.
-
-[source,shell]
-----
-[nick@guest1 ~]$ /usr/libexec/platform-python --version
-Python 3.6.8
-[nick@guest1 ~]$ 
-----
-
-Platform-python is provided by a few packages that were added by the installer, when the system was built. 
-Running ``rpm -qa | grep platform-python`` displays the package list. 
-
 Directory  ``/usr/lib/python3.6/site-packages/`` contains many Python modules. 
 These were also installed via RPM packages when the system was built. 
 There are dozens of these packages, from ``python3-asn1crypto`` to ``python3-urllib3``.
@@ -68,21 +33,8 @@ https://fedoraproject.org/wiki/DNF[DNF] history shows the package list.
 ...
 ----
 
-== choose a python version 
 
-Python versions 2 and 3 are available. 
-There are two minor versions of v3 available in RHEL 8.2, 3.6 (same as the system's copy) and 3.8.
-
-If you dont know whether to which https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/using-python3_configuring-basic-system-settings#python_versions[Python version] to install, go for 3.6. 
-Version 2.7 is https://www.python.org/doc/sunset-python-2/[no longer being improved]. 
-Version 3.6 is supported by Red Hat for the lifetime of RHEL 8, but 3.8 is supported only for the lifetime of RHEL 8.2.
-
-The names of supporting python packages for version 3.6 start with _python3-_. Many of these  are already installed in ``/usr/lib64/python3.6/site-packages/``. 
-
-If you install Python 3.8, you have no modules - you must start from scratch. PYTHONPATH  directories like ``/usr/lib64/python3.8/site-packages/`` are empty. RPM packages for v3.8 start with _python38-_, so you can list these using the command ``sudo dnf search python38-``. There are hundreds of _python3-_ packages and only dozens of _python38-_ packages. You may have to rely on pip3 instead of dnf, using commands like ``sudo pip3 install selinux``.
-
-
-== pick a dnf module 
+== list DNF modules 
 
 Three modules are available to make installing an older version easier. 
 https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/installing_managing_and_removing_user-space_components/introduction-to-modules_using-appstream[dnf module streams] are available for Python 2.7,  3.6 and 3.8.  
@@ -108,20 +60,6 @@ Hint: [d]efault, [e]nabled, [x]disabled, [i]nstalled
 [nick@guest1 ~]$ 
 ----
 
-
-== install 
-
-You can install both Python2 and Python3. Use _alternatives_ to choose which one the command ``python`` fires up.
-
-=== python27/common 
-
-Install the oldest Python with the command ``sudo dnf module install python27``. The ``[d]`` shows the *common* profile is the default, so ``python27`` is shorthand for typing ``python27/common``.
-
-Commands ``python2`` and ``pip2`` are now available. 
-
-=== python38/build 
-
-Install the latest Python available with the command ``sudo dnf module install python38/build``. 
 The two python38 profiles *build* and *common* are similar. 
 Both contain a selection of programs including 
 https://docs.python.org/3/[python3], 
@@ -129,7 +67,50 @@ https://pip.pypa.io/en/stable/user_guide/[pip3] and
 https://setuptools.readthedocs.io/en/latest/[setuptools], 
 but _build_ includes a few more tools for compiling programs and building RPM packages. 
 
+
+
+== install python36/build
+
+This minor release is maintained for the entire life of RHEL 8. 
+
+[source,shell]
+----
+sudo dnf module install python38/build
+----
+
+Errr, this is the common profile 
+
+[source,shell]
+----
+[nick@control ~]$ sudo dnf module install python36
+Updating Subscription Management repositories.
+Last metadata expiration check: 0:16:24 ago on Fri 15 Oct 2021 11:07:38 BST.
+Dependencies resolved.
+================================================================================
+ Package            Arch   Version       Repository                        Size
+================================================================================
+Installing group/module packages:
+ python36           x86_64 3.6.8-2.module+el8.1.0+3334+5cb623d7
+                                         rhel-8-for-x86_64-appstream-rpms  19 k
+Installing dependencies:
+ python3-pip        noarch 9.0.3-19.el8  rhel-8-for-x86_64-appstream-rpms  20 k
+ python3-setuptools noarch 39.2.0-6.el8  rhel-8-for-x86_64-baseos-rpms    163 k
+Installing module profiles:
+ python36/common                                                               
+Enabling module streams:
+ python36                  3.6                                                 
+
+Transaction Summary
+================================================================================
+Install  3 Packages
+
+Total download size: 201 k
+Installed size: 466 k
+Is this ok [y/N]: 
+----
+
 This places commands ``python3`` and ``pip3`` in /usr/bin/.
+
 
 
 === use alternatives to link python to python3 
@@ -158,18 +139,14 @@ Enter to keep the current selection[+], or type selection number: 3
 [nick@guest1 ~]$ 
 ....
 
-The _alternatives_ tool works by creating a chain of symlinks. The python command takesa pretty indirect route to get to python3.8: /usr/bin/python -> /etc/alternatives/unversioned-python -> /usr/bin/python3 -> /etc/alternatives/python3 --> /usr/bin/python3.8.
+The _alternatives_ tool works by creating a chain of symlinks. The python command takesa pretty indirect route to get to python3: /usr/bin/python -> /etc/alternatives/unversioned-python -> /usr/bin/python3 -> /etc/alternatives/python3 --> /usr/bin/python3.8.
 
 [source,shell]
 ....
 [nick@guest1 ~]$ which python
 /usr/bin/python
 [nick@guest1 ~]$ python --version
-Python 3.8.0
+Python 3.6.8
 [nick@guest1 ~]$ 
 ....
-
-== next steps 
-
-virtualenv 
 

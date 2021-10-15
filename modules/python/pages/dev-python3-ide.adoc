@@ -1,0 +1,209 @@
+= add a VIM IDE 
+Nick Hardiman
+:source-highlighter: highlight.js
+:revdate: 12-10-2021
+
+Install http://www.vim.org/[VIM (VIsual editor iMproved)].
+That is already set up with syntax highlighting, automatic indentation, 
+
+
+== install VIM 
+
+[source,shell]
+....
+[root@control ~]# dnf install vim
+Updating Subscription Management repositories.
+Last metadata expiration check: 1:40:06 ago on Fri 15 Oct 2021 14:10:18 BST.
+Dependencies resolved.
+================================================================================
+ Package      Arch   Version             Repository                        Size
+================================================================================
+Installing:
+ vim-enhanced x86_64 2:8.0.1763-15.el8   rhel-8-for-x86_64-appstream-rpms 1.4 M
+Installing dependencies:
+ gpm-libs     x86_64 1.20.7-17.el8       rhel-8-for-x86_64-appstream-rpms  39 k
+ vim-common   x86_64 2:8.0.1763-15.el8   rhel-8-for-x86_64-appstream-rpms 6.3 M
+
+Transaction Summary
+================================================================================
+Install  3 Packages
+
+Total download size: 7.7 M
+Installed size: 30 M
+Is this ok [y/N]: 
+....
+
+
+== check settings 
+
+Open the editor. 
+
+[source,shell]
+....
+[nick@host1 ansible]$ vim
+~                                                                               
+~                                                                               
+~                              VIM - Vi IMproved                                
+~                                                                               
+~                               version 8.0.1763                                
+~                           by Bram Moolenaar et al.                            
+~                      Modified by <bugzilla@redhat.com>                        
+~                 Vim is open source and freely distributable                   
+~                                                                               
+~                        Help poor children in Uganda!                          
+~                type  :help iccf<Enter>       for information                  
+~                                                                               
+~                type  :q<Enter>               to exit                          
+~                type  :help<Enter>  or  <F1>  for on-line help                 
+~                type  :help version8<Enter>   for version info                 
+~                                                                               
+~                                                                               
+~                                                                               
+....
+
+View settings. 
+These are set in the config file _/etc/vimrc_. 
+
+[source,shell]
+....
+:set                                                
+--- Options ---
+  display=truncate    langnoremap         scrolloff=5         ttymouse=sgr
+  helplang=en       nolangremap           showcmd             viminfo='20,"50
+  history=200         nrformats=bin,hex   ttimeout            wildmenu
+  hlsearch            ruler               ttimeoutlen=100
+  incsearch           scroll=17           ttyfast
+  backspace=indent,eol,start
+  fileencodings=ucs-bom,utf-8,latin1
+  guicursor=n-v-c:block,o:hor50,i-ci:hor15,r-cr:hor30,sm:block,a:blinkon0
+Press ENTER or type command to continue
+....
+
+Start writing a Python script.
+Save the new file.
+
+[source,shell]
+....
+#!/usr/bin/env python3
+
+~                                                                               
+~                                                                               
+~                                                                               
+~                                                                               
+"first_script.py" [New] 2L, 24C written                       2,0-1         All
+....
+
+Check settings again. 
+More appear. 
+
+[source,shell]
+....
+:set
+--- Options ---
+  autoindent          hlsearch            scrolloff=5         ttimeoutlen=100
+...
+  guicursor=n-v-c:block,o:hor50,i-ci:hor15,r-cr:hor30,sm:block,a:blinkon0
+  include=^\s*\(from\|import\)
+  includeexpr=substitute(substitute(substitute(v:fname,b:grandparent_match,b:gra
+ndparent_sub,''),b:parent_match,b:parent_sub,''),b:child_match,b:child_sub,'g')
+  indentexpr=GetPythonIndent(v:lnum)
+  indentkeys=0{,0},:,!^F,o,O,e,<:>,=elif,=except
+  omnifunc=python3complete#Complete
+Press ENTER or type command to continue
+....
+
+Close the editor. 
+
+[source,shell]
+....
+~                                                                               
+~                                                                               
+:q
+[nick@host1 ansible]$ 
+....
+
+
+== add a setting 
+
+[source,shell]
+....
+[nick@host1 ansible]$ echo 'set nu' >> ~/.vimrc
+[nick@host1 ansible]$ 
+....
+
+Check your work. 
+
+[source,shell]
+....
+[nick@host1 ansible]$ vim ./first_script.py 
+
+  1 #!/usr/bin/env python3
+  2 
+~                                                                               
+~                                                                               
+~                                                                               
+"./first_script.py" 2L, 24C                                   1,1           All
+....
+
+
+== add a plugin 
+
+A plugin is a combination of settings and code that adds a new feature to VIM. 
+For more information, see https://opensource.com/article/20/2/how-install-vim-plugins[How to install Vim plugins].
+
+Useful plugins include syntax checking, keyword auto-completion and git integration. 
+This example installs vim-airline. 
+https://github.com/vim-airline/vim-airline[vim-airline] is a popular plugin changes the status bar.
+
+Create a directory for new plugins.
+
+[source,shell]
+....
+[nick@host1 ansible]$ cd
+[nick@host1 ~]$ 
+[nick@host1 ~]$ mkdir ~/.vim/pack/foo/start
+[nick@host1 ~]$ 
+[nick@host1 ~]$ cd ~/.vim/pack/foo/start
+[nick@host1 start]$ 
+....
+
+Download the plugin. 
+
+[source,shell]
+....
+[nick@host1 start]$ git clone https://github.com/vim-airline/vim-airline.git
+Cloning into 'vim-airline'...
+remote: Enumerating objects: 14795, done.
+remote: Counting objects: 100% (460/460), done.
+remote: Compressing objects: 100% (282/282), done.
+remote: Total 14795 (delta 234), reused 343 (delta 163), pack-reused 14335
+Receiving objects: 100% (14795/14795), 3.59 MiB | 6.36 MiB/s, done.
+Resolving deltas: 100% (7943/7943), done.
+[nick@host1 start]$ 
+....
+
+Check your work. 
+
+....
+[nick@host1 ~]$ vim ~/ansible/my_hello.py 
+
+  1 #!/usr/bin/python
+  2 #
+  3 # https://github.com/nickhardiman/ansible-examples/blob/master/module-custom    /my_hello.py
+  4 from ansible.module_utils.basic import AnsibleModule
+  5 
+  6 def main():
+  7 
+  8   module = AnsibleModule(argument_spec={})
+  9   response = {"module_says": "Hello, world."}
+ 10   module.exit_json(changed=False, my_return=response)
+ 11 
+ 12 if __name__ == '__main__':
+ 13     main()
+ 14 
+~
+~
+~
+ NORMAL  ansible/my_hello.py                               pyt…  7% ㏑:1/14☰℅:1 
+"~/ansible/my_hello.py" 14L, 359C
+....
