@@ -28,5 +28,6 @@ nav:
 - modules/use-ansible-modules/nav.adoc 
 - modules/use-ansible-tools/nav.adoc 
 - modules/use-ansible-plugins/nav.adoc 
+- modules/python/nav.adoc 
 - modules/write-ansible-modules/nav.adoc 
 - modules/write-ansible-plugins/nav.adoc 
