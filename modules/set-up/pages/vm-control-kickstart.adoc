@@ -90,7 +90,6 @@ logvol swap  --fstype="swap" --size=256   --name=swap --vgname=rhel
 # applications and services 
 # Do not configure the X Window System
 skipx
-services --enabled="httpd"
 
 # done
 # skip anaconda's prompt "Installation complete. Press ENTER to quit:"
@@ -123,15 +122,32 @@ pwpolicy luks --minlen=6 --minquality=1 --notstrict --nochanges --notempty
 %end
 ....
 
-Customize the file. 
-Change this line to match your developer account. 
+Save your work. 
+
+
+== customize the file
+
+Edit the file. 
+
+Change subscription manager values.
+Change this line to match your developer account.
+This is the user name and password for https://access.redhat.com/, https://developers.redhat.com/ and https://console.redhat.com/.
 
 [source,kickstart]
 ....
 /usr/sbin/subscription-manager register --username=nick --password='some password!' 
 ....
 
+Change this line to match your pool ID (a long subscription key that looks like 123456789abcdef123456789abcdef12). 
+To find your pool ID, run this command on the host _host1_. `sudo subscription-manager list --consumed`
+
+[source,kickstart]
+....
+/usr/sbin/subscription-manager attach  --pool=123456789abcdef123456789abcdef12
+....
+
 Save your work. 
+
 
 == check the kickstart file 
 
@@ -142,8 +158,8 @@ No news is good news.
 
 [source,shell]
 ....
-[root@host1 libvirt]# ksvalidator control.ks 
-[root@host1 libvirt]# 
+[nick@host1 libvirt]# ksvalidator control.ks 
+[nick@host1 libvirt]# 
 ....
 
 This static code analyzer is handy for catching typos, like typing _%edn_ instead of _%end_.
