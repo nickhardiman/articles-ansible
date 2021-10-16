@@ -1,0 +1,77 @@
+= write a hello world module
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 12-10-2021
+
+
+== where does it go 
+
+Set the ANSIBLE_LIBRARY environment variable to tell the playbook where to look for the module.
+
+This environment variable is used to set one of Ansible's configuration variables.
+Confusingly, the names don't match. 
+The environment variable is named ANSIBLE_LIBRARY and the configuration variable is DEFAULT_MODULE_PATH.
+
+
+== write the module 
+
+Python 
+
+.module my_hello.py
+[source,python]
+----
+#!/usr/bin/python
+#
+
+from ansible.module_utils.basic import AnsibleModule
+
+def main():
+
+  module = AnsibleModule(argument_spec={})
+  response = {"module_says": "Hello, world."}
+  module.exit_json(changed=False, my_return=response)
+
+if __name__ == '__main__':
+    main()
+----
+
+
+== write the playbook
+
+YAML 
+
+.playbook my_hello_playbook
+[source,yaml]
+----
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+
+  - name: This module has no arguments. It displays "hello world"
+    my_hello: 
+    register: r_my_hello
+
+  # display the result so we can see STDOUT
+  - debug: 
+      var: r_my_hello
+----
+
+
+== use the module
+
+Run.
+
+[source,yaml]
+----
+ANSIBLE_LIBRARY=module-custom  ansible-playbook my_hello_playbook.yml 
+----
+
+The code does not include documentation, so this doesn't work. 
+
+[source,shell]
+----
+ANSIBLE_LIBRARY=module-custom  ansible-doc my_hello
+----
+

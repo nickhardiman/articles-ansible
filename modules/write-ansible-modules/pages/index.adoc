@@ -4,3 +4,6 @@ Nick Hardiman
 :revdate: 12-10-2021
 
 Write Ansible modules.
+
+* https://docs.ansible.com/ansible/latest/dev_guide/index.html[Developer Guide]
+* https://docs.ansible.com/ansible/latest/dev_guide/developing_modules_general.html[Developing Ansible modules]
