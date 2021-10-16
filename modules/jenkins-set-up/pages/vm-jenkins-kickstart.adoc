@@ -1,9 +1,9 @@
-= create a kickstart file for control 
+= create a kickstart file for jenkins 
 Nick Hardiman
 :source-highlighter: highlight.js
 :revdate: 11-01-2021
 
-Create a kickstart file for the virtual machine _control_.
+Create a kickstart file for the virtual machine _jenkins_.
 This machine will be built using a *fresh install* build process, as opposed to a golden image build process. 
 
 This procedure is similar to xref:rhel8-on-pn50:virtual-machine:guest1-kickstart-file.adoc[].
@@ -14,18 +14,15 @@ This procedure is similar to xref:rhel8-on-pn50:virtual-machine:guest1-kickstart
 Create a new https://en.wikipedia.org/wiki/Kickstart_(Linux)[kickstart] file.
 This file will contain all the configuration instructions for the kickstart program to follow. 
 
-The naming policy for this file is "__machine_name__.ks". 
-This kickstart config file goes in the _libvirt_ directory, along with bridge scripts and libvirt XML definitions. 
-
 Keep config files in one place. 
-Use a directory named _ansible_. 
+Use a directory named _iac_. 
 
 [source,shell]
 ....
-[nick@host1 ~]$ mkdir ansible
+[nick@host1 ~]$ mkdir iac
 [nick@host1 ~]$ 
-[nick@host1 ~]$ cd ~/ansible/
-[nick@host1 ansible]$ 
+[nick@host1 ~]$ cd ~/iac/
+[nick@host1 iac]$ 
 ....
 
 Search Red Hat's    
@@ -35,7 +32,7 @@ Edit a new file.
 
 [source,shell]
 ....
-[nick@host1 ansible]$ vim control.ks
+[nick@host1 iac]$ vim jenkins.ks
 ....
 
 Add this content. 
@@ -44,7 +41,7 @@ There is one change to make, in a later step.
 
 [source,kickstart]
 ....
-# kickstart file for control.lab.example.com
+# kickstart file for jenkins.lab.example.com
 # for further information, see Appendix B. Kickstart commands and options reference
 # https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/performing_an_advanced_rhel_installation/kickstart-commands-and-options-reference_installing-rhel-as-an-experienced-user
 # install
@@ -62,7 +59,7 @@ keyboard uk
 
 # network
 network  --bootproto=dhcp --device=enp1s0 --ipv6=auto --activate
-network  --hostname=control.lab.example.com
+network  --hostname=jenkins.lab.example.com
 
 # licences and repos
 # And have a look at the "subscription" section, in the post section below. 
@@ -158,7 +155,7 @@ No news is good news.
 
 [source,shell]
 ....
-[nick@host1 libvirt]# ksvalidator control.ks 
+[nick@host1 libvirt]# ksvalidator jenkins.ks 
 [nick@host1 libvirt]# 
 ....
 
@@ -166,11 +163,12 @@ This static code analyzer is handy for catching typos, like typing _%edn_ instea
 
 [source,shell]
 ....
-[nick@host1 ansible]$ ksvalidator control.ks
+[nick@host1 iac]$ ksvalidator jenkins.ks
 The following problem occurred on line 79 of the kickstart file:
 
 Section %post does not end with %end.
 
-[nick@host1 ansible]$ 
+[nick@host1 iac]$ 
 ....
+
 

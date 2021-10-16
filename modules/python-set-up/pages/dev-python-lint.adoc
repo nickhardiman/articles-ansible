@@ -7,7 +7,8 @@ Better to use https://flake8.pycqa.org/ than https://pylint.pycqa.org/?
 
 Use a static code analyzer to check code.
 A https://en.wikipedia.org/wiki/Lint_(software)[linter] catches programmatic problems and stylistic problems. 
-
+Not all static code analyzers are linters for general-purpose programming languages. 
+The ksvalidator tool checks kickstart files.
 
 == install pylint 
 
