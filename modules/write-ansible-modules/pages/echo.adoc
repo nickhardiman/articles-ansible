@@ -78,7 +78,7 @@ YAML
     debug: 
       msg: "DEFAULT_MODULE_PATH: {{ lookup('config', 'DEFAULT_MODULE_PATH')}}"
 
-  - name: This one does. And it has documentation. Echo something on STDOUT. 
+  - name: Echo something on STDOUT. 
     my_echo: 
       say_this: Hello again!
     register: r_my_echo
@@ -100,3 +100,36 @@ ANSIBLE_LIBRARY=module-custom  ansible-playbook my_echo_playbook.yml
 
 
 
+Output 
+
+[source,shell]
+----
+workstation:ansible-examples nick$ ANSIBLE_LIBRARY=module-custom  ansible-doc my_echo
+
+
+PLAY [localhost] ***************************************************************
+
+TASK [This is how Ansible set the ANSIBLE_LIBRARY path.] ***********************
+ok: [localhost] => {
+    "msg": "DEFAULT_MODULE_PATH: ['/Users/nick/Documents/ansible-examples/module-custom']"
+}
+
+TASK [Echo something on STDOUT.] ***********************************************
+ok: [localhost]
+
+TASK [debug] *******************************************************************
+ok: [localhost] => {
+    "r_my_echo": {
+        "changed": false,
+        "failed": false,
+        "my_return": {
+            "playbook_said": "Hello again!"
+        }
+    }
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+workstation:ansible-examples nick$ ANSIBLE_LIBRARY=module-custom  ansible-doc my_echo
+----

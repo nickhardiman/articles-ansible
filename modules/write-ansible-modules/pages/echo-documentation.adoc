@@ -60,3 +60,28 @@ Read the documentation.
 ANSIBLE_LIBRARY=module-custom  ansible-doc my_echo
 ----
 
+Output 
+
+[source,shell]
+----
+workstation:ansible-examples nick$ ANSIBLE_LIBRARY=module-custom  ansible-doc my_echo
+> MY_ECHO    (/Users/nick/Documents/ansible-examples/module-custom/my_echo.py)
+
+        Display a message on STDOUT. To see the message, register the return values and display them.
+
+EXAMPLES:
+
+- name: echo something on STDOUT. 
+  my_echo: 
+    say_this: Hello world!
+
+
+RETURN VALUES:
+- playbook_said
+        The output message from the module
+
+        returned: always
+        sample: Well hello there
+        type: str
+workstation:ansible-examples nick$ 
+----

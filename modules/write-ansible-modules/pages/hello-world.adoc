@@ -6,6 +6,9 @@ Nick Hardiman
 
 == where does it go 
 
+Put the module here: module-custom/my_hello.py
+(that's module-custom with a hyphen and my_echo with an underscore)
+
 Set the ANSIBLE_LIBRARY environment variable to tell the playbook where to look for the module.
 
 This environment variable is used to set one of Ansible's configuration variables.
@@ -75,3 +78,42 @@ The code does not include documentation, so this doesn't work.
 ANSIBLE_LIBRARY=module-custom  ansible-doc my_hello
 ----
 
+Output 
+
+[source,shell]
+----
+workstation:ansible-examples nick$ ANSIBLE_LIBRARY=module-custom  ansible-doc my_echo
+
+PLAY [localhost] ***************************************************************
+
+TASK [This module has no arguments. It displays "hello world"] *****************
+[WARNING]: Platform darwin on host localhost is using the discovered Python
+interpreter at /usr/bin/python, but future installation of another Python
+interpreter could change the meaning of that path. See https://docs.ansible.com
+/ansible/2.10/reference_appendices/interpreter_discovery.html for more
+information.
+ok: [localhost]
+
+TASK [debug] *******************************************************************
+ok: [localhost] => {
+    "r_my_hello": {
+        "ansible_facts": {
+            "discovered_interpreter_python": "/usr/bin/python"
+        },
+        "changed": false,
+        "failed": false,
+        "my_return": {
+            "module_says": "Hello, world."
+        },
+        "warnings": [
+            "Platform darwin on host localhost is using the discovered Python interpreter at /usr/bin/python, but future installation of another Python interpreter could change the meaning of that path. See https://docs.ansible.com/ansible/2.10/reference_appendices/interpreter_discovery.html for more information."
+        ]
+    }
+}
+
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+workstation:ansible-examples nick$ ANSIBLE_LIBRARY=module-custom  ansible-doc my_echo
+----
