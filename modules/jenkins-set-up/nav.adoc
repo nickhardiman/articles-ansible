@@ -1,4 +1,6 @@
 * xref:index.adoc[]
 ** xref:vm-jenkins-kickstart.adoc[]
 ** xref:vm-jenkins-create.adoc[]
+** xref:jenkins-install.adoc[]
+** xref:jenkins-configure.adoc[]
 

@@ -3,7 +3,9 @@ Nick Hardiman
 :source-highlighter: highlight.js
 :revdate: 11-01-2021
 
-Create a kickstart file for the virtual machine _jenkins_.
+Create a kickstart file for the virtual machine _jenkinslab.example.com_.
+This will be a Jenkins controller node. 
+
 This machine will be built using a *fresh install* build process, as opposed to a golden image build process. 
 
 This procedure is similar to xref:rhel8-on-pn50:virtual-machine:guest1-kickstart-file.adoc[].

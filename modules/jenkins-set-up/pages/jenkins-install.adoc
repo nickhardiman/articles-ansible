@@ -1,0 +1,220 @@
+= install Jenkins
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 16-10-2021
+
+Use http://pkg.jenkins-ci.org/redhat-stable/[Red Hat Packages from the Jenkins site] to [install Jenkins].
+
+
+== install Java 
+
+Use the root account. 
+
+[source,shell]
+----
+[nick@jenkins ~]$ sudo su -
+
+We trust you have received the usual lecture from the local System
+Administrator. It usually boils down to these three things:
+
+    #1) Respect the privacy of others.
+    #2) Think before you type.
+    #3) With great power comes great responsibility.
+
+[sudo] password for nick: 
+Last login: Sat Oct 16 22:52:06 BST 2021 on ttyS0
+[root@jenkins ~]# 
+----
+
+Install the https://openjdk.java.net/projects/jdk/11/[OpenJDK 11] runtime environment.
+
+This package requires many others to work. 
+Since the OS has a minimal set of packages, these required packages must also be installed. 
+It all adds up to an install list of 75 packages. 
+
+
+[source,shell]
+----
+[root@jenkins ~]# dnf install java-11-openjdk
+Updating Subscription Management repositories.
+Last metadata expiration check: 3:34:50 ago on Sat 16 Oct 2021 19:21:27 BST.
+Dependencies resolved.
+==================================================================================
+ Package             Arch   Version        Repository                        Size
+==================================================================================
+Installing:
+ java-11-openjdk     x86_64 1:11.0.12.0.7-0.el8_4
+                                           rhel-8-for-x86_64-appstream-rpms 261 k
+Installing dependencies:
+ adwaita-cursor-theme
+                     noarch 3.28.0-2.el8   rhel-8-for-x86_64-appstream-rpms 647 k
+ adwaita-icon-theme  noarch 3.28.0-2.el8   rhel-8-for-x86_64-appstream-rpms  11 M
+ alsa-lib            x86_64 1.2.4-5.el8    rhel-8-for-x86_64-appstream-rpms 471 k
+...
+ xorg-x11-fonts-Type1
+                     noarch 7.5-19.el8     rhel-8-for-x86_64-appstream-rpms 522 k
+Installing weak dependencies:
+ abattis-cantarell-fonts
+                     noarch 0.0.25-6.el8   rhel-8-for-x86_64-appstream-rpms 156 k
+ dconf               x86_64 0.28.0-4.el8   rhel-8-for-x86_64-appstream-rpms 108 k
+ gtk3                x86_64 3.22.30-6.el8  rhel-8-for-x86_64-appstream-rpms 4.5 M
+Enabling module streams:
+ javapackages-runtime
+                            201801                                               
+
+Transaction Summary
+==================================================================================
+Install  75 Packages
+
+Total download size: 67 M
+Installed size: 247 M
+Is this ok [y/N]: 
+----
+
+
+== add repository config
+
+Create a new repository configuration file by copying one from the Jenkins site. 
+
+[source,shell]
+----
+[root@jenkins ~]# curl --silent --output /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
+[root@jenkins ~]# 
+----
+
+Check the new config. 
+This file points DNF at the Jenkins site. 
+
+[source,shell]
+----
+[root@jenkins ~]# cat /etc/yum.repos.d/jenkins.repo 
+[jenkins]
+name=Jenkins-stable
+baseurl=http://pkg.jenkins.io/redhat-stable
+gpgcheck=1
+[root@jenkins ~]# 
+----
+
+Add the Jenkins public key. 
+Without this key, DNF will display the error _Error: GPG check FAILED_ and refuse to install the jenkins package. 
+This is the LTS (Long Term Support) key. 
+
+[source,shell]
+----
+[root@jenkins ~]# rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+[root@jenkins ~]# 
+----
+
+
+Add config for the EPEL repository.
+The jenkins package requires an old package called http://software.clapper.org/daemonize/[daemonize], which is found in this EPEl repository.
+
+[source,shell]
+----
+[root@jenkins ~]# dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+Updating Subscription Management repositories.
+Last metadata expiration check: 0:11:46 ago on Sat 16 Oct 2021 23:17:37 BST.
+epel-release-latest-8.noarch.rpm                   51 kB/s |  23 kB     00:00    
+Dependencies resolved.
+==================================================================================
+ Package              Architecture   Version           Repository            Size
+==================================================================================
+Installing:
+ epel-release         noarch         8-13.el8          @commandline          23 k
+...
+Complete!
+[root@jenkins ~]# 
+----
+
+
+
+== install Jenkins 
+
+[source,shell]
+----
+[root@jenkins ~]# dnf install jenkins
+Updating Subscription Management repositories.
+Extra Packages for Enterprise Linux Modular 8 - x 1.6 MB/s | 955 kB     00:00    
+Extra Packages for Enterprise Linux 8 - x86_64    6.3 MB/s |  10 MB     00:01    
+Last metadata expiration check: 0:00:01 ago on Sat 16 Oct 2021 23:31:17 BST.
+Dependencies resolved.
+==================================================================================
+ Package            Architecture    Version                Repository        Size
+==================================================================================
+Installing:
+ jenkins            noarch          2.303.2-1.1            jenkins           69 M
+Installing dependencies:
+ daemonize          x86_64          1.7.8-1.el8            epel              27 k
+
+Transaction Summary
+==================================================================================
+Install  2 Packages
+
+Total download size: 69 M
+Installed size: 69 M
+Is this ok [y/N]:
+----
+
+== check 
+
+View the user. 
+
+[source,shell]
+----
+[root@jenkins ~]# grep jenkins /etc/passwd
+jenkins:x:993:990:Jenkins Automation Server:/var/lib/jenkins:/bin/false
+[root@jenkins ~]# 
+[root@jenkins ~]# id jenkins
+uid=993(jenkins) gid=990(jenkins) groups=990(jenkins)
+[root@jenkins ~]# 
+----
+
+View the home directory. 
+
+[source,shell]
+----
+[root@jenkins ~]# su - jenkins -s /bin/bash
+[jenkins@jenkins ~]$ 
+[jenkins@jenkins ~]$ pwd
+/var/lib/jenkins
+[jenkins@jenkins ~]$ 
+[jenkins@jenkins ~]$ ls -a
+.                                               jobs
+..                                              .lastStarted
+.cache                                          logs
+config.xml                                      nodeMonitors.xml
+.groovy                                         nodes
+hudson.model.UpdateCenter.xml                   plugins
+hudson.plugins.git.GitTool.xml                  secret.key
+identity.key.enc                                secret.key.not-so-secret
+.java                                           secrets
+jenkins.install.InstallUtil.lastExecVersion     updates
+jenkins.install.UpgradeWizard.state             userContent
+jenkins.model.JenkinsLocationConfiguration.xml  users
+jenkins.telemetry.Correlator.xml                workflow-libs
+[jenkins@jenkins ~]$ 
+[jenkins@jenkins ~]$ exit
+logout
+[root@jenkins ~]# 
+----
+
+View listening processes (daemons).
+
+[source,shell]
+----
+[root@jenkins ~]# ss -tlnp
+State     Recv-Q    Send-Q        Local Address:Port         Peer Address:Port    Process                                                                           
+LISTEN    0         128                 0.0.0.0:22                0.0.0.0:*        users:(("sshd",pid=943,fd=5))                                                    
+LISTEN    0         50                        *:8080                    *:*        users:(("java",pid=14960,fd=120))                                                
+LISTEN    0         128                    [::]:22                   [::]:*        users:(("sshd",pid=943,fd=7))                                                    
+[root@jenkins ~]# 
+----
+
+Finish with the root user. 
+
+[source,shell]
+----
+[root@jenkins ~]# exit
+logout
+[nick@jenkins ~]$ 
+----

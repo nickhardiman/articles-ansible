@@ -1,0 +1,181 @@
+= install Jenkins
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 16-10-2021
+
+Use http://pkg.jenkins-ci.org/redhat-stable/[Red Hat Packages from the Jenkins site] to [install Jenkins].
+
+
+== start the service 
+
+Use the root account. 
+
+[source,shell]
+----
+[nick@jenkins ~]$ sudo su -
+
+We trust you have received the usual lecture from the local System
+Administrator. It usually boils down to these three things:
+
+    #1) Respect the privacy of others.
+    #2) Think before you type.
+    #3) With great power comes great responsibility.
+
+[sudo] password for nick: 
+Last login: Sat Oct 16 22:52:06 BST 2021 on ttyS0
+[root@jenkins ~]# 
+----
+
+Tell systemd to reload configuration.
+
+[source,shell]
+----
+[root@jenkins ~]# systemctl daemon-reload
+[root@jenkins ~]# systemctl status jenkins
+● jenkins.service - LSB: Jenkins Automation Server
+   Loaded: loaded (/etc/rc.d/init.d/jenkins; generated)
+   Active: inactive (dead)
+     Docs: man:systemd-sysv-generator(8)
+[root@jenkins ~]# 
+----
+
+Check the status of jenkins. 
+
+[source,shell]
+----
+[root@jenkins ~]# systemctl daemon-reload
+[root@jenkins ~]# systemctl status jenkins
+● jenkins.service - LSB: Jenkins Automation Server
+   Loaded: loaded (/etc/rc.d/init.d/jenkins; generated)
+   Active: inactive (dead)
+     Docs: man:systemd-sysv-generator(8)
+[root@jenkins ~]# 
+----
+
+It comes with an old startup shell script, not a systemd unit file. 
+
+[source,shell]
+----
+[root@jenkins ~]# head -3  /etc/rc.d/init.d/jenkins 
+#!/bin/sh
+#
+#     RedHat system statup script for Jenkins
+[root@jenkins ~]# 
+----
+
+Enable.
+
+[source,shell]
+----
+[root@jenkins ~]# systemctl enable jenkins
+jenkins.service is not a native service, redirecting to systemd-sysv-install.
+Executing: /usr/lib/systemd/systemd-sysv-install enable jenkins
+[root@jenkins ~]# 
+----
+
+Start. 
+
+[source,shell]
+----
+[root@jenkins ~]# systemctl start jenkins
+[root@jenkins ~]#
+----
+
+Check.
+
+[source,shell]
+----
+[root@jenkins ~]# systemctl status jenkins
+● jenkins.service - LSB: Jenkins Automation Server
+   Loaded: loaded (/etc/rc.d/init.d/jenkins; generated)
+   Active: active (running) since Sat 2021-10-16 23:48:21 BST; 24s ago
+     Docs: man:systemd-sysv-generator(8)
+  Process: 14954 ExecStart=/etc/rc.d/init.d/jenkins start (code=exited, status=0/>
+    Tasks: 49 (limit: 23533)
+   Memory: 1.1G
+   CGroup: /system.slice/jenkins.service
+           └─14960 /etc/alternatives/java -Djava.awt.headless=true -DJENKINS_HOME>
+
+Oct 16 23:48:21 jenkins.lab.example.com systemd[1]: Starting LSB: Jenkins Automat>
+Oct 16 23:48:21 jenkins.lab.example.com jenkins[14954]: Starting Jenkins [  OK  ]
+Oct 16 23:48:21 jenkins.lab.example.com systemd[1]: Started LSB: Jenkins Automati>
+[root@jenkins ~]# 
+----
+
+Those last few line of activity log messages can be displayed using journalctl. 
+
+[source,shell]
+----
+[root@jenkins ~]# journalctl --unit=jenkins --no-pager
+-- Logs begin at Sat 2021-10-16 22:48:37 BST, end at Sat 2021-10-16 23:50:01 BST. --
+Oct 16 23:48:21 jenkins.lab.example.com systemd[1]: Starting LSB: Jenkins Automation Server...
+Oct 16 23:48:21 jenkins.lab.example.com jenkins[14954]: Starting Jenkins [  OK  ]
+Oct 16 23:48:21 jenkins.lab.example.com systemd[1]: Started LSB: Jenkins Automation Server.
+[root@jenkins ~]# 
+----
+
+
+== open the firewall 
+
+[source,shell]
+----
+[root@jenkins ~]# firewall-cmd --add-service jenkins 
+success
+[root@jenkins ~]# firewall-cmd --add-service jenkins  --permanent
+success
+[root@jenkins ~]# 
+----
+
+== use the web user interface 
+
+Copy the administrator password.
+
+[source,shell]
+----
+[root@jenkins ~]# cat /var/lib/jenkins/secrets/initialAdminPassword
+444852457f134008a46899ba17825efb
+[root@jenkins ~]# 
+----
+
+Find the IP address with _ip a_. 
+
+Open the web page. http://192.168.1.237:8080/
+
+Enter the administrator password. 
+
+Install suggested plugins. 
+Lots. 
+
+. Ant 
+. Build Timeout 
+. Credentials Binding 
+. Email Extension 
+. Folders 
+. Git 
+. GitHub Branch Source 
+. Gradle 
+. LDAP 
+. Mailer
+. Matrix Authorization Strategy 
+. OWASP Markup Formatter 
+. PAM Authentication 
+. Pipeline 
+. Pipeline: GitHub Groovy Libraries 
+. Pipeline: Stage View 
+. SSH Build Agents 
+. Timestamper 
+. Workspace Cleanup 
+
+Create First Admin User
+
+* Username:	
+* Password:	
+* Confirm password:	
+* Full name:	
+* E-mail address:
+
+
+== install blue ocean 
+
+https://www.jenkins.io/doc/book/blueocean/getting-started/
+
