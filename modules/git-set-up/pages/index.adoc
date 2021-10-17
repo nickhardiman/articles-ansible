@@ -1,0 +1,7 @@
+= set up git
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 25-09-2021
+
+Git provides SCM (Source Code Management).
+

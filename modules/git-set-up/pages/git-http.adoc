@@ -1,0 +1,7 @@
+= add HTTP access with apache
+Nick Hardiman
+:source-highlighter: highlight.js
+:revdate: 17-10-2021
+
+Create a common repository for code collaboration.
+https://git-scm.com/book/en/v2/Git-on-the-Server-Smart-HTTP
