@@ -12,53 +12,131 @@ On guest1
 Install git with the command ``sudo dnf install git``.
 This installs the _git-core_ package and many perl modules. 
 
+[source,shell]
+....
+[nick@guest1 ~]$ sudo dnf install git
+Updating Subscription Management repositories.
+Last metadata expiration check: 1:41:31 ago on Mon 18 Oct 2021 21:13:39 BST.
+Dependencies resolved.
+================================================================================
+ Package          Arch   Version         Repository                        Size
+================================================================================
+Installing:
+ git              x86_64 2.27.0-1.el8    rhel-8-for-x86_64-appstream-rpms 164 k
+Installing dependencies:
+ emacs-filesystem noarch 1:26.1-5.el8    rhel-8-for-x86_64-baseos-rpms     69 k
+ git-core         x86_64 2.27.0-1.el8    rhel-8-for-x86_64-appstream-rpms 5.7 M
+ git-core-doc     noarch 2.27.0-1.el8    rhel-8-for-x86_64-appstream-rpms 2.5 M
+...
+ perl-podlators   noarch 4.11-1.el8      rhel-8-for-x86_64-baseos-rpms    118 k
+ perl-threads     x86_64 1:2.21-2.el8    rhel-8-for-x86_64-baseos-rpms     61 k
+ perl-threads-shared
+                  x86_64 1.58-2.el8      rhel-8-for-x86_64-baseos-rpms     48 k
+Installing weak dependencies:
+ perl-IO-Socket-IP
+                  noarch 0.39-5.el8      rhel-8-for-x86_64-appstream-rpms  47 k
+ perl-IO-Socket-SSL
+                  noarch 2.066-4.module+el8.3.0+6446+594cad75
+                                         rhel-8-for-x86_64-appstream-rpms 298 k
+ perl-Mozilla-CA  noarch 20160104-7.module+el8.3.0+6498+9eecfe51
+                                         rhel-8-for-x86_64-appstream-rpms  15 k
+Enabling module streams:
+ perl                    5.26                                                  
+ perl-IO-Socket-SSL
+                         2.066                                                 
+ perl-libwww-perl        6.34                                                  
 
-== configure a few things
+Transaction Summary
+================================================================================
+Install  48 Packages
 
-Create a common group. 
-Add a few users to this group.
+Total download size: 21 M
+Installed size: 80 M
+Is this ok [y/N]: 
+....
+
+
+== configure a git group 
+
 These tasks are only done once. 
 
 There are plenty of commands that need elevated privileges here. 
 Rather than typing _sudo_ every time, use the root account. 
 
 
-Create a common directory. 
+Use the root account. 
 
 [source,shell]
 ....
 [nick@guest1 ~]$ sudo su -
-[root@guest1 ~]# groupadd scm
-[root@guest1 ~]# usermod -a -G scm nick
 [root@guest1 ~]# 
-[root@guest1 ~]# mkdir /var/git
 ....
 
-Change the group ownership.
+Create a common user and group. 
 
 [source,shell]
 ....
-[root@guest1 ~]# chown root.scm /var/git/
+[root@guest1 ~]# useradd scm
+[root@guest1 ~]#  
+[root@guest1 ~]# id scm
+uid=1001(scm) gid=1001(scm) groups=1001(scm)
+[root@guest1 ~]#  
+....
+
+This also creates a home directory. 
+
+[source,shell]
+....
+[root@guest1 ~]# cd /home/scm/
+[root@guest1 scm]# ls -la
+total 12
+drwx------. 2 scm  scm   62 Oct 18 22:33 .
+drwxr-xr-x. 4 root root  29 Oct 18 22:33 ..
+-rw-r--r--. 1 scm  scm   18 Apr 21 15:04 .bash_logout
+-rw-r--r--. 1 scm  scm  141 Apr 21 15:04 .bash_profile
+-rw-r--r--. 1 scm  scm  376 Apr 21 15:04 .bashrc
+[root@guest1 scm]# cd 
 [root@guest1 ~]# 
+....
+
+
+== configure a git content directory
+
+Create a directory to hold content. 
+
+[source,shell]
+....
+[root@guest1 ~]# mkdir /var/git
+[root@guest1 ~]# 
+....
+
+Change the directory's ownership.
+
+[source,shell]
+....
+[root@guest1 ~]# chown scm.scm /var/git/
+[root@guest1 ~]# 
+....
+
+Change the directory's permissions.
+
+[source,shell]
+....
+[root@guest1 ~]# ls -ld /var/git
+drwxr-xr-x. 2 scm scm 6 Oct 18 22:34 /var/git
+[root@guest1 ~]# 
+[root@guest1 ~]# chmod 770 /var/git
+[root@guest1 ~]# 
+....
+
+
+
+Stop using elevated privileges.
+
+[source,shell]
+.... 
 [root@guest1 ~]# exit
 logout
-[nick@guest1 ~]$ 
-....
-
-Add git user configuration. 
-
-Configure git. 
-Otherwise, committing the file fails with a 'fatal: empty ident name not allowed' error. 
-
-[source,shell]
-....
-[nick@guest1 ~]$ git config --global user.email "nick@lab.example.com"
-[nick@guest1 ~]$ git config --global user.name "Nick Hardiman"
-[nick@guest1 ~]$ 
-[nick@guest1 ~]$ cat .gitconfig 
-[user]
-	email = nick@lab.example.com
-	name = Nick Hardiman
 [nick@guest1 ~]$ 
 ....
 
@@ -71,15 +149,18 @@ These tasks are repeated for every new git repo.
 
 [source,shell]
 ....
-[nick@guest1 ~]$ sudo su -
-[root@guest1 ~]#  cd /var/git/
-[root@guest1 git]# NEW_REPO=content1.git
-[root@guest1 git]# git init --bare --shared=group $NEW_REPO
-Initialized empty shared Git repository in /var/git/content1.git/
-[root@guest1 git]# 
-[root@guest1 git]# chgrp -R scm $NEW_REPO
-[root@guest1 git]# 
-[root@guest1 git]# exit
+[nick@guest1 ~]$ sudo su - scm
+[nick@guest1 ~]$ sudo su - scm
+Last login: Mon Oct 18 22:52:34 BST 2021 on pts/0
+[scm@guest1 ~]$ cd /var/git
+[scm@guest1 git]$ NEW_REPO=content1.git
+[scm@guest1 git]$ git init --bare $NEW_REPO
+Initialized empty Git repository in /var/git/content1.git/
+[scm@guest1 git]$ 
+[scm@guest1 git]$ ls 
+content1.git
+[scm@guest1 git]$ 
+[scm@guest1 git]$ exit
 logout
 [nick@guest1 ~]$ 
 ....

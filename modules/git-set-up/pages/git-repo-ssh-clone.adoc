@@ -20,24 +20,57 @@ We want multiple locations to access git over the network. This git service will
 * SSH. There's no install work to do because it's already running. And no security work either, because SSH handles access control and traffic encryption. SSH port 22 is already open on firewalls. 
 
 
+== add your public key to git's list of authorized keys
+
+??? was ssh-keygen mentioned before
+
+SSH refuses to work if any old geezer has permission to look at files. 
+
+[source,shell]
+.... 
+[root@guest1 ~]# mkdir /home/scm/.ssh
+[root@guest1 ~]# chmod 700 /home/scm/.ssh
+[root@guest1 ~]# 
+[root@guest1 ~]# cat  /home/nick/.ssh/id_rsa.pub >> /home/scm/.ssh/authorized_keys
+[root@guest1 ~]# chmod 600 /home/scm/.ssh/authorized_keys
+[root@guest1 ~]# 
+....
+
+Fix ownership. 
+
+[source,shell]
+.... 
+[root@guest1 ~]# chown -R scm.scm /home/scm/.ssh/
+[root@guest1 ~]# 
+....
+
+
 == create a personal repository 
 
 Clone the new shared repo for your personal use. 
 Copy the repo to your home directory with git clone. 
 
-This command uses SSH to connect to the git host. Some SSH security messages appear. 
+This |_git clone_ command uses SSH to connect to a host.  
 
 [source,shell]
 ....
-[nick@guest1 ~]$ git clone git1:/var/git/content1.git
-Cloning into 'content1'...
-The authenticity of host 'git1 (192.168.122.4)' can't be established.
-ECDSA key fingerprint is SHA256:nTrTxkZuJVURnVOqoC563D7F4yd3fnWOMewJBeL7bXw.
-Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
-Warning: Permanently added 'git1,192.168.122.4' (ECDSA) to the list of known hosts.
+git clone <user>@<host>:<directory>
 ....
 
-A warning appears about the suspiciously empty directory. 
+Some SSH security messages appear. 
+
+[source,shell]
+....
+[nick@guest1 ~]$ git clone scm@git1.lab.example.com:/var/git/content1.git
+Cloning into 'content1'...
+The authenticity of host 'git1.lab.example.com (192.168.1.217)' can't be established.
+ECDSA key fingerprint is SHA256:bI6WTnvVehkwr5ZoUlXJzONyk2/kEwGIX4f+enmJpRs.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added 'git1.lab.example.com,192.168.1.217' (ECDSA) to the list of known hosts.
+....
+
+A warning appears about a suspiciously empty directory. 
+The new _content1_ directory appears, and does contain a _.git_ directory. 
 
 [source,shell]
 ....
@@ -72,9 +105,27 @@ hello world
 
 Time to store a copy somewhere safe. 
 
+== add git user configuration
+
+Configure git. 
+Otherwise, committing the file causes git to complain that it had to guess at who the author is. 
+
+[source,shell]
+....
+[nick@guest1 content1]$ git config --global user.email "nick@lab.example.com"
+[nick@guest1 content1]$ 
+[nick@guest1 content1]$ git config --global user.name "Nick Hardiman"
+[nick@guest1 content1]$ 
+[nick@guest1 content1]$ cat ~/.gitconfig 
+[user]
+	email = nick@lab.example.com
+	name = Nick Hardiman
+[nick@guest1 content1]$ 
+....
 
 
-== commit to both repositories 
+
+== update both repositories 
 
 Commit the new file to your personal repo. 
 
@@ -103,43 +154,39 @@ To git1:/var/git/content1.git
 ....
 
 
-== set up key-based login 
+== check both repositories 
 
-We have to type in our account password every time the remote repository is accessed. 
+Check your git log looks like the log of the shared repo 
 
-!!! no it doesnt
-
-That gets tiresome. 
-Git provides credential helpers for web access, but not for SSH. 
-Set up public key access so SSH won't prompt for a password. 
-
-Append your public key to the list of authorized keys. 
+Check your local repo's git log.
 
 [source,shell]
-----
-[nick@guest1 content1]$ cd
-[nick@guest1 ~]$ cat .ssh/id_rsa.pub  >> .ssh/authorized_keys 
-[nick@guest1 ~]$ 
-----
+....
+[nick@guest1 content1]$ git log
+commit 6ac7168a652d9afdb0457f9d07166ef4401881fe (HEAD -> master, origin/master)
+Author: nick <nick@guest1.lab.example.com>
+Date:   Mon Oct 18 23:05:54 2021 +0100
 
-Check.
-
-[source,shell]
-----
-[nick@guest1 content1]$ ssh git1.lab.example.com
-The authenticity of host 'git1.lab.example.com (192.168.122.4)' can't be established.
-ECDSA key fingerprint is SHA256:nTrTxkZuJVURnVOqoC563D7F4yd3fnWOMewJBeL7bXw.
-Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
-Warning: Permanently added 'git1.lab.example.com' (ECDSA) to the list of known hosts.
-Activate the web console with: systemctl enable --now cockpit.socket
-
-This system is not registered to Red Hat Insights. See https://cloud.redhat.com/
-To register this system, run: insights-client --register
-
-Last login: Fri Jul  3 12:58:51 2020 from 192.168.122.1
-[nick@guest1 ~]$ 
-[nick@guest1 ~]$ logout
-Connection to git1.lab.example.com closed.
+    create hello-world.sh
 [nick@guest1 content1]$ 
-----
+....
 
+Check the shared repo's git log. 
+
+[source,shell]
+....
+[nick@guest1 content1]$ sudo su - scm
+Last login: Mon Oct 18 22:57:59 BST 2021 on pts/0
+[scm@guest1 ~]$ 
+[scm@guest1 ~]$ cd /var/git/content1.git/
+[scm@guest1 content1.git]$ 
+[scm@guest1 content1.git]$ git log
+commit 6ac7168a652d9afdb0457f9d07166ef4401881fe (HEAD -> master)
+Author: nick <nick@guest1.lab.example.com>
+Date:   Mon Oct 18 23:05:54 2021 +0100
+
+    create hello-world.sh
+[scm@guest1 content1.git]$ 
+[scm@guest1 content1.git]$ logout
+[nick@guest1 content1]$ 
+....

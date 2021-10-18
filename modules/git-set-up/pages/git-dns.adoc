@@ -1,13 +1,75 @@
-= add DNS for git.
+= add git1 to DNS
 Nick Hardiman
 :source-highlighter: highlight.js
 :revdate: 02-06-2020
 
 The new repo lives on a new host named _git1.lab.example.com_. This new _git1_ host  can be accessed across the network using the SSH protocol. The _git1_ host may look like a new network location, but isn't actually a new machine - it's another name for guest1. 
 
-== add DNS for git
 
-Help host1 users find the common git repo. 
+== add to bind9
+
+??? https://bind9.readthedocs.io/en/v9_16_5/advanced.html#dynamic-update better?
+
+
+Add a record. 
+
+[source,shell]
+....
+[nick@guest1 ~]$ sudo bash -c 'echo "git1         IN A    192.168.1.217" >> /var/named/lab.example.com-records'
+[nick@guest1 ~]$ 
+....
+
+Check the file. 
+
+[source,shell]
+....
+[nick@guest1 ~]$ sudo tail -n5 /var/named/lab.example.com-records
+; these records are names and addresses for (HOST).lab.example.com
+dns1         IN A    192.168.1.217
+guest1       IN A    192.168.1.217
+
+git1         IN A    192.168.1.217
+[nick@guest1 ~]$ 
+....
+
+Tell Bind9 to re-read its configuration files. 
+
+[source,shell]
+....
+[nick@guest1 ~]$ sudo rndc reload
+server reload successful
+[nick@guest1 ~]$ 
+....
+
+Check resolution. 
+
+This is good. 
+
+[source,shell]
+....
+[nick@guest1 ~]$ host git1.lab.example.com
+git1.lab.example.com has address 192.168.1.217
+[nick@guest1 ~]$ 
+....
+
+This is bad. 
+
+[source,shell]
+....
+[nick@guest1 ~]$ host git1.lab.example.com
+Host git1.lab.example.com not found: 3(NXDOMAIN)
+[nick@guest1 ~]$ 
+....
+
+
+
+
+== add to /etc/hosts on host1
+
+Possibly pointless. 
+
+This gives the address of git1 to host1 and dnsmasq.
+
 Add a new host name *git1* and fully qualified name *git1.lab.example.com* to DNS. 
 
 DNS is controlled by dnsmasq running on the host machine. 
@@ -20,7 +82,7 @@ This is the only change made on the host machine.
 
 [source,shell]
 ....
-[nick@host1 ~]$ sudo bash -c 'echo "192.168.122.4 git git.lab.example.com" >> /etc/hosts'
+[nick@host1 ~]$ sudo bash -c 'echo "192.168.1.217  git1.lab.example.com  git1" >> /etc/hosts'
 [sudo] password for nick: 
 [nick@host1 ~]$ 
 [nick@host1 ~]# sudo systemctl restart libvirtd

@@ -3,6 +3,8 @@ Nick Hardiman
 :source-highlighter: highlight.js
 :revdate: 25-09-2021
 
+Every new piece of code needs a new home. 
+
 Git provides SCM (Source Code Management).
 
 Create a common repository for code collaboration named _git1.lab.example.com_. 
@@ -46,9 +48,8 @@ Copy this repo to other machines.
 ....
 
 
-Every new piece of code needs a new home. 
 
-This article spells out the git commands for visitors from the version control worlds of Perforce, Mercurial, ClearCase and elsewhere. 
+Other version control worlds include https://www.perforce.com/[Perforce], https://www.mercurial-scm.org/[Mercurial], https://www.ibm.com/products/rational-clearcase[ClearCase] and elsewhere. 
 
 == an SCM (Source Code Manager)
 
@@ -62,7 +63,8 @@ There is plenty that isn't done here.
 * No workflow - no branching, tests, submodules, and certainly no CI pipelines.  
 * No private group access, or general public access - this instance of git can be used across the network, but is not shared with others. That takes config and permission work. 
 
-This is an instance of core git, included in RHEL 8's appstream repo. Git tools are a central component of much fancier products like https://gitea.io/[Gitea], https://gogs.io/[Gogs],	https://about.gitlab.com/install/?version=ce[GitLab CE], and https://rhodecode.com/open-source[RhodeCode CE]. This git doesn't run any extra processes because it doesn't run as a daemon. Instead, the SSH service handles the transport and running git commands.  
+This is an instance of core git, included in RHEL 8's appstream repo. 
+Git tools are a central component of much fancier products like https://gitea.io/[Gitea], https://gogs.io/[Gogs],	https://about.gitlab.com/install/?version=ce[GitLab CE], and https://rhodecode.com/open-source[RhodeCode CE]. This git doesn't run any extra processes because it doesn't run as a daemon. Instead, the SSH service handles the transport and running git commands.  
 
 
 == git on the network 
