@@ -5,3 +5,67 @@ Nick Hardiman
 
 Git provides SCM (Source Code Management).
 
+Create a common repository for code collaboration named _git1.lab.example.com_. 
+This isn't a new host, it's actually another name for _guest1.lab.example.com_.
+Copy this repo to other machines. 
+
+* a repo named *content1.git*. No, the name doesn't make sense. This is the common copy for sharing, located on guest1.
+* clones named *content1*. Theses are development copies to hack.
+
+.git repos 
+....
+.-----------------------------------------.  
+|  git repositories on guest1             |
+|   +--------------+    +--------------+  |
+|   |              |    |              |  |
+|   | content1     |    | content1.git |  |
+|   | (clone)      |--->| (remote)     |  |
+|   +--------------+    +--------------+  |
+|                             ^ ^         |
+.-----------------------------|-|---------. 
+                              | |
+.-----------------------------|-|----------.  
+|  git repositories on guest2 | |         |
+|                             | |         |
+|   +--------------+          | |         |
+|   |              |          | |         |
+|   | content1     |          | |         |
+|   | (clone)      |----------+ |         |
+|   +--------------+            |         |
+.-------------------------------|---------.  
+                                |
+.-------------------------------|---------.  
+|  git repositories on guest3   |         |
+|                               |         |
+|   +--------------+            |         |
+|   |              |            |         |
+|   | content1     |            |         |
+|   | (clone)      |------------+         |
+|   +--------------+                      |
+.-----------------------------------------.  
+....
+
+
+Every new piece of code needs a new home. 
+
+This article spells out the git commands for visitors from the version control worlds of Perforce, Mercurial, ClearCase and elsewhere. 
+
+== an SCM (Source Code Manager)
+
+We're going to develop code in the directory /home/nick/content1/. 
+We need a way of keeping this content safe and sharing it. 
+Create a git repository called _content1.git_ to manage this code.
+This will become the new remote for all clones. 
+
+There is plenty that isn't done here. 
+
+* No workflow - no branching, tests, submodules, and certainly no CI pipelines.  
+* No private group access, or general public access - this instance of git can be used across the network, but is not shared with others. That takes config and permission work. 
+
+This is an instance of core git, included in RHEL 8's appstream repo. Git tools are a central component of much fancier products like https://gitea.io/[Gitea], https://gogs.io/[Gogs],	https://about.gitlab.com/install/?version=ce[GitLab CE], and https://rhodecode.com/open-source[RhodeCode CE]. This git doesn't run any extra processes because it doesn't run as a daemon. Instead, the SSH service handles the transport and running git commands.  
+
+
+== git on the network 
+
+The new repo lives on a new host named _git1.lab.example.com_. This new _git1_ host  can be accessed across the network using the SSH protocol. The _git1_ host may look like a new network location, but isn't actually a new machine - it's another name for guest1. 
+

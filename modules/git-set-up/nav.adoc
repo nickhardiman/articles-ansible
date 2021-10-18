@@ -1,4 +1,8 @@
 * xref:index.adoc[]
-** xref:git.adoc[]
+** xref:git-dns.adoc[]
+** xref:git-repo-shared.adoc[]
+** xref:git-repo-ssh-clone.adoc[]
+** xref:git-repo-anotheruser.adoc[]
 ** xref:git-hook.adoc[]
+** xref:git-http.adoc[]
 

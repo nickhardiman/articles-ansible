@@ -1,0 +1,78 @@
+= use key-based SSH login
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 25-09-2021
+
+
+
+Test with another user. 
+
+== create anotheruser 
+
+Must be in scm group. 
+
+== use anotheruser
+
+
+[source,shell]
+----
+[nick@guest1 ~]$ sudo su - anotheruser
+[anotheruser@guest1 ~]$ 
+----
+
+Copy the repo. 
+Check git clone works.
+
+
+[source,shell]
+----
+[anotheruser@guest1 ~]$ git clone git1:/var/git/content1.git
+Cloning into 'content1'...
+The authenticity of host 'git1 (192.168.122.4)' can't be established.
+ECDSA key fingerprint is SHA256:nTrTxkZuJVURnVOqoC563D7F4yd3fnWOMewJBeL7bXw.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added 'git1,192.168.122.4' (ECDSA) to the list of known hosts.
+anotheruser@git1's password: 
+Cloning into 'content1'...
+anotheruser@git1's password: 
+remote: Enumerating objects: 12, done.
+remote: Counting objects: 100% (12/12), done.
+remote: Compressing objects: 100% (6/6), done.
+remote: Total 12 (delta 0), reused 0 (delta 0)
+Receiving objects: 100% (12/12), done.
+[anotheruser@guest1 ~]$ 
+----
+
+Have any files appeared?
+
+[source,shell]
+----
+[anotheruser@guest1 ~]$ ls content1/
+hello-world.sh
+[anotheruser@guest1 ~]$  
+----
+
+Check git push.
+
+Add to the repo. 
+Use these commands to configure git and add a new file.
+
+[source,shell]
+----
+git config --global user.email "anotheruser@lab.example.com"
+git config --global user.name "Some User"
+cd content1
+touch anotheruser-test 
+git add anotheruser-test
+git commit -m'create anotheruser-test'
+git push
+----
+
+Done. 
+
+[source,shell]
+----
+[anotheruser@guest1 ~]$ logout
+[nick@guest1 ~]$ 
+----
+

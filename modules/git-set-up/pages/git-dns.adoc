@@ -1,0 +1,44 @@
+= add DNS for git.
+Nick Hardiman
+:source-highlighter: highlight.js
+:revdate: 02-06-2020
+
+The new repo lives on a new host named _git1.lab.example.com_. This new _git1_ host  can be accessed across the network using the SSH protocol. The _git1_ host may look like a new network location, but isn't actually a new machine - it's another name for guest1. 
+
+== add DNS for git
+
+Help host1 users find the common git repo. 
+Add a new host name *git1* and fully qualified name *git1.lab.example.com* to DNS. 
+
+DNS is controlled by dnsmasq running on the host machine. 
+We can't add a line to dnsmasq's config (/var/lib/libvirt/dnsmasq/default.conf) because libvirt will overwrite the file and our change will be lost.
+We can add more libvirt config, to its XML files.  
+But it's simpler to a line to /etc/hosts. 
+Libvirt reads this file when it starts. 
+
+This is the only change made on the host machine. 
+
+[source,shell]
+....
+[nick@host1 ~]$ sudo bash -c 'echo "192.168.122.4 git git.lab.example.com" >> /etc/hosts'
+[sudo] password for nick: 
+[nick@host1 ~]$ 
+[nick@host1 ~]# sudo systemctl restart libvirtd
+[nick@host1 ~]# 
+....
+
+Check.
+
+[source,shell]
+....
+[nick@host1 ~]# host git1.lab.example.com 192.168.122.1
+Using domain server:
+Name: 192.168.122.1
+Address: 192.168.122.1#53
+Aliases: 
+
+git1.lab.example.com has address 192.168.122.4
+[nick@host1 ~]# 
+....
+
+
