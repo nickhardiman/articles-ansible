@@ -1,0 +1,268 @@
+= install apache
+Nick Hardiman
+:source-highlighter: highlight.js
+:revdate: 17-10-2021
+
+Install Apache.
+Set up modules to provide information. 
+
+The server listens to port 80 by default. 
+That port is for plain text traffic.
+
+
+== install 
+
+[source,shell]
+....
+[nick@guest1 ~]$ sudo dnf install httpd
+[sudo] password for nick: 
+Updating Subscription Management repositories.
+Last metadata expiration check: 0:49:44 ago on Tue 19 Oct 2021 20:51:05 BST.
+Dependencies resolved.
+================================================================================
+ Package            Arch   Version       Repository                        Size
+================================================================================
+Installing:
+ httpd              x86_64 2.4.37-39.module+el8.4.0+12865+a7065a39.1
+                                         rhel-8-for-x86_64-appstream-rpms 1.4 M
+Installing dependencies:
+ apr                x86_64 1.6.3-11.el8  rhel-8-for-x86_64-appstream-rpms 125 k
+ apr-util           x86_64 1.6.1-6.el8   rhel-8-for-x86_64-appstream-rpms 105 k
+ httpd-filesystem   noarch 2.4.37-39.module+el8.4.0+12865+a7065a39.1
+                                         rhel-8-for-x86_64-appstream-rpms  39 k
+ httpd-tools        x86_64 2.4.37-39.module+el8.4.0+12865+a7065a39.1
+                                         rhel-8-for-x86_64-appstream-rpms 106 k
+ mailcap            noarch 2.1.48-3.el8  rhel-8-for-x86_64-baseos-rpms     39 k
+ mod_http2          x86_64 1.15.7-3.module+el8.4.0+8625+d397f3da
+                                         rhel-8-for-x86_64-appstream-rpms 154 k
+ redhat-logos-httpd noarch 84.4-1.el8    rhel-8-for-x86_64-baseos-rpms     29 k
+Installing weak dependencies:
+ apr-util-bdb       x86_64 1.6.1-6.el8   rhel-8-for-x86_64-appstream-rpms  25 k
+ apr-util-openssl   x86_64 1.6.1-6.el8   rhel-8-for-x86_64-appstream-rpms  27 k
+Enabling module streams:
+ httpd                     2.4                                                 
+
+Transaction Summary
+================================================================================
+Install  10 Packages
+
+Total download size: 2.0 M
+Installed size: 5.4 M
+Is this ok [y/N]: 
+....
+
+Copies executables, logs, content and config. 
+Config includes many systemd files.
+
+
+== view systemd units
+
+The unit file httpd.service starts and stops apache.
+
+There is also a socket unit file and drop-in directories. 
+The httpd@.service file is an "instantiated template service".
+For more information, run  `man httpd.service`.
+
+
+[source,shell]
+----
+[nick@guest1 ~]# ls -1dF /usr/lib/systemd/system/httpd*
+/usr/lib/systemd/system/httpd.service
+'/usr/lib/systemd/system/httpd@.service'
+/usr/lib/systemd/system/httpd.service.d/
+/usr/lib/systemd/system/httpd.socket
+/usr/lib/systemd/system/httpd.socket.d/
+[nick@guest1 ~]# 
+----
+
+View the unit configuration. 
+
+[source,shell]
+----
+[nick@guest1 ~]# systemctl cat httpd.service
+# /usr/lib/systemd/system/httpd.service
+# See httpd.service(8) for more information on using the httpd service.
+
+# Modifying this file in-place is not recommended, because changes
+# will be overwritten during package upgrades.  To customize the
+# behaviour, run "systemctl edit httpd" to create an override unit.
+
+# For example, to pass additional options (such as -D definitions) to
+# the httpd binary at startup, create an override unit (as is done by
+# systemctl edit) and enter the following:
+
+#       [Service]
+#       Environment=OPTIONS=-DMY_DEFINE
+
+[Unit]
+Description=The Apache HTTP Server
+Wants=httpd-init.service
+After=network.target remote-fs.target nss-lookup.target httpd-init.service
+Documentation=man:httpd.service(8)
+
+[Service]
+Type=notify
+Environment=LANG=C
+
+ExecStart=/usr/sbin/httpd $OPTIONS -DFOREGROUND
+ExecReload=/usr/sbin/httpd $OPTIONS -k graceful
+# Send SIGWINCH for graceful stop
+KillSignal=SIGWINCH
+KillMode=mixed
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+
+[nick@guest1 ~]# 
+----
+
+
+
+== start the server 
+
+Tell systemd to run apache. 
+
+Start the service.  
+
+[source,shell]
+----
+[nick@guest1 ~]$ sudo systemctl start httpd.service 
+[sudo] password for nick: 
+[nick@guest1 ~]$ sudo systemctl enable httpd.service 
+Created symlink /etc/systemd/system/multi-user.target.wants/httpd.service → /usr/lib/systemd/system/httpd.service.
+[nick@guest1 ~]$ 
+----
+
+== look around. 
+
+=== view config 
+
+[source,shell]
+----
+[nick@guest1 ~]$ ls /etc/httpd/conf*
+/etc/httpd/conf:
+httpd.conf  magic
+
+/etc/httpd/conf.d:
+autoindex.conf  README  userdir.conf  welcome.conf
+
+/etc/httpd/conf.modules.d:
+00-base.conf  00-mpm.conf       00-systemd.conf  10-proxy_h2.conf
+00-dav.conf   00-optional.conf  01-cgi.conf      README
+00-lua.conf   00-proxy.conf     10-h2.conf
+[nick@guest1 ~]$ 
+----
+
+
+=== view content
+
+View the docroot (the content directory). No files are present. 
+
+[source,shell]
+----
+[root@guest1 ~]# ls /var/www/html/
+[root@guest1 ~]# 
+----
+
+
+=== view logs 
+
+Apache manages its own logging. 
+When Apache starts, it creates two log files. 
+
+[source,shell]
+----
+[nick@guest1 ~]$ sudo ls /var/log/httpd/
+access_log  error_log
+[nick@guest1 ~]$ 
+----
+
+=== view processes 
+
+Apache runs half a dozen processes. 
+One parent, four children. 
+Each child has many threads. 
+
+[source,shell]
+----
+[nick@guest1 ~]# ps -fC httpd
+UID          PID    PPID  C STIME TTY          TIME CMD
+root      256917       1  0 21:04 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
+apache    256918  256917  0 21:04 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
+apache    256919  256917  0 21:04 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
+apache    256920  256917  0 21:04 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
+apache    256921  256917  0 21:04 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
+[nick@guest1 ~]# 
+----
+
+The pstree utility can display a simple tree of processes. 
+Install pstree by running `sudo dnf install psmisc`.
+
+List the children of httpd parent process. 
+The parent is the one owned by root. 
+
+[source,shell]
+----
+[nick@guest1 ~]# pstree -cT 256917
+httpd─┬─httpd
+      ├─httpd
+      ├─httpd
+      └─httpd
+[nick@guest1 ~]# 
+----
+
+Get the HTTP headers.
+The code is 403, forbidden. 
+
+[source,shell]
+----
+[nick@guest1 ~]# curl --head localhost 
+HTTP/1.1 403 Forbidden
+Date: Mon, 01 Feb 2021 21:20:14 GMT
+Server: Apache/2.4.37 (Red Hat Enterprise Linux)
+Last-Modified: Mon, 15 Jun 2020 11:49:07 GMT
+ETag: "f91-5a81e03a232c0"
+Accept-Ranges: bytes
+Content-Length: 3985
+Content-Type: text/html; charset=UTF-8
+
+[nick@guest1 ~]# 
+----
+
+Get the home page. 
+It's a big page, so display the HTTP headers and the top of the page only. 
+
+[source,shell]
+----
+[nick@guest1 ~]# curl --silent localhost | head -n 5
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<title>Test Page for the Apache HTTP Server on Red Hat Enterprise Linux</title>
+[nick@guest1 ~]# 
+----
+
+There is no content to display, so we're getting an error page instead. 
+
+
+
+== open the firewall 
+
+Clients on the network can't see this web server. 
+Open the firewall. 
+
+[source,shell]
+----
+[nick@guest1 ~]$ sudo firewall-cmd --add-service http
+success
+[nick@guest1 ~]$ sudo firewall-cmd --add-service http --permanent
+success
+[nick@guest1 ~]$ 
+----
+
+
+
+
+

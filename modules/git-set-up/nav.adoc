@@ -3,6 +3,7 @@
 ** xref:git-repo-shared.adoc[]
 ** xref:git-repo-ssh-clone.adoc[]
 ** xref:git-repo-anotheruser.adoc[]
+** xref:git-httpd-install.adoc[]
+** xref:git-httpd-cgi.adoc[]
 ** xref:git-hook.adoc[]
-** xref:git-http.adoc[]
 

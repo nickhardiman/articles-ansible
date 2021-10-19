@@ -1,0 +1,11 @@
+= configure git CGI 
+Nick Hardiman
+:source-highlighter: highlight.js
+:revdate: 19-10-2021
+
+
+Create a common repository for code collaboration.
+https://git-scm.com/book/en/v2/Git-on-the-Server-Smart-HTTP
+
+SElinux for another docroot 
+https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/selinux_users_and_administrators_guide/sect-managing_confined_services-the_apache_http_server-configuration_examples#sect-Managing_Confined_Services-Configuration_examples-Running_a_static_site
