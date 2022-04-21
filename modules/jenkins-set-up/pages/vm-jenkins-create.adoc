@@ -54,16 +54,16 @@ And virt-install options are listed one per line.
 ....
 HOST=jenkins
 NEW_DISK=/var/lib/libvirt/images/$HOST.qcow2
-INSTALL_ISO=/var/lib/libvirt/images/rhel-8.3-x86_64-dvd.iso
+INSTALL_ISO=/var/lib/libvirt/images/rhel-8.5-x86_64-dvd.iso
 KICKSTART_CONFIG=/home/nick/iac/$HOST.ks
-IF1_MAC=52:54:00:00:00:09
+IF1_MAC=52:54:00:00:00:18
 
 virt-install \
   --name="$HOST" \
   --vcpus=2 \
   --ram=4096 \
   --disk path=$NEW_DISK,size=50 \
-  --os-variant rhel8.3 \
+  --os-variant rhel8.5 \
   --network network=pubbr0,mac=$IF1_MAC   \
   --boot uefi,hd,menu=on \
   --location $INSTALL_ISO \

@@ -13,7 +13,7 @@ Install this on the control node.
 |  host1                                               |
 |                                                      |
 |   +-------------------+       +-------------------+  |
-|   |  guest1           |       | guest2            |  |
+|   | controller1       |       | guest1            |  |
 |   |   control node    | SSH   |   managed node    |  |
 |   |                   +------>|                   |  |
 |   +-------------------+       +-------------------+  |
