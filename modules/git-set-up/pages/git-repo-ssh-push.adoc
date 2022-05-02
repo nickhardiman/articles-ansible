@@ -1,0 +1,98 @@
+= git push using SSH
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 25-09-2021
+
+
+
+
+== create content 
+
+Create a bash script on guest1.
+The script is created by a one-liner command, which requires some tricky quoting and the special character \n.
+
+[source,shell]
+....
+[nick@guest1 ~]$ cd content1/
+[nick@guest1 content1]$ echo -e '#!'"/bin/bash\necho 'hello world'\n" > hello-world.sh
+[nick@guest1 content1]$ chmod 754 ./hello-world.sh 
+....
+
+Does it work? 
+
+[source,shell]
+....
+[nick@guest1 content1]$ ./hello-world.sh 
+hello world
+[nick@guest1 content1]$ 
+....
+
+Time to store a copy somewhere safe. 
+
+
+== update both repositories 
+
+Commit the new file to your personal repo. 
+
+[source,shell]
+....
+[nick@guest1 content1]$ git add hello-world.sh 
+[nick@guest1 content1]$ git commit -m 'create hello-world.sh'
+[master (root-commit) 540c540] create hello-world.sh
+ 1 file changed, 3 insertions(+)
+ create mode 100755 hello-world.sh
+[nick@guest1 content1]$ 
+....
+
+Copy to the shared repo.
+
+[source,shell]
+....
+[nick@guest1 content1]$ git push 
+Enumerating objects: 3, done.
+Counting objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 262 bytes | 262.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To git1:/var/git/content1.git
+ * [new branch]      master -> master
+[nick@guest1 content1]$
+....
+
+
+== check both repositories 
+
+Check your git log looks like the log of the shared repo 
+
+Check your local repo's git log.
+
+[source,shell]
+....
+[nick@guest1 content1]$ git log
+commit 6ac7168a652d9afdb0457f9d07166ef4401881fe (HEAD -> master, origin/master)
+Author: nick <nick@guest1.lab.example.com>
+Date:   Mon Oct 18 23:05:54 2021 +0100
+
+    create hello-world.sh
+[nick@guest1 content1]$ 
+....
+
+Check the shared repo's git log. 
+
+[source,shell]
+....
+[nick@guest1 content1]$ sudo su - scm
+Last login: Mon Oct 18 22:57:59 BST 2021 on pts/0
+[scm@guest1 ~]$ 
+[scm@guest1 ~]$ cd /var/git/content1.git/
+[scm@guest1 content1.git]$ 
+[scm@guest1 content1.git]$ git log
+commit 6ac7168a652d9afdb0457f9d07166ef4401881fe (HEAD -> master)
+Author: nick <nick@guest1.lab.example.com>
+Date:   Mon Oct 18 23:05:54 2021 +0100
+
+    create hello-world.sh
+[scm@guest1 content1.git]$ 
+[scm@guest1 content1.git]$ logout
+[nick@guest1 content1]$ 
+....
+

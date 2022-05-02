@@ -91,6 +91,10 @@ ansible
 
 == create the ansible-target role 
 
+??? why not put in the default location 
+
+~/.ansible/roles/ 
+
 Create an ansible role called _ansible-target_. 
 Use ``ansible-galaxy`` to create the framework, then add content to half a dozen files. 
 
@@ -124,6 +128,15 @@ ansible
             └── sudoers
 ....
 
+
+== add variables 
+
+Create a keypair, ansible-key and ansible-key.pub
+
+* ssh-keygen -f ./ansible-key
+* cat ansible-key, add to var file 
+* indent two spaces. 
+
 Add variables. 
 
 .ansible/roles/ansible-target/defaults/main.yml
@@ -148,6 +161,7 @@ control_node_private_key: |
   -----END OPENSSH PRIVATE KEY-----
 ....
 
+Create a tasks file. 
 Write tasks. 
 
 .ansible/roles/ansible-target/tasks/main.yml
@@ -156,7 +170,7 @@ Write tasks.
 ---
 # tasks file for ansible-target
 
-# local private key 
+# local private key
 #
 - name: add control node private key
   copy:
@@ -166,39 +180,43 @@ Write tasks.
   delegate_to: localhost
   connection: local
   become: no
-    
+
 # remote everything else
 #
 - name: add group
-  group:
+  ansible.builtin.group:
     name: "{{ managed_node_group }}"
     state: present
 
-- name: add user 
-  user:
+- name: add user
+  ansible.builtin.user:
     name: "{{ managed_node_user }}"
     group: "{{ managed_node_group }}"
-    state: present 
-  
+    state: present
+
 - name: add authorized key
-  authorized_key: 
+  ansible.posix.authorized_key:
     user: "{{ managed_node_user }}"
     key: "{{ managed_node_public_key }}"
 
 - name: add passwordless sudo
-  template:
+  ansible.builtin.template:
     src: sudoers
     dest: "/etc/sudoers.d/{{ managed_node_user }}"
     validate: /usr/sbin/visudo -cf %s
 
 - name: information
-  debug:
-    msg: 
-    - "User {{ managed_node_user }} is ready on the managed nodes."
-    - "SSH without a password using one of these options."
-    - "* add '--user {{ managed_node_user }} --private-key {{ control_node_private_key_file }}' to the command line"
-    - "* add these lines 'remote_user = {{ managed_node_user }}' and 'ansible_ssh_private_key_file: {{ control_node_private_key_file }}' to ansible.cfg"
+  ansible.builtin.debug:
+    msg:
+    - "User {{ managed_node_user }} is ready on the managed node."
+    - "Try this."
+    - "  ansible --module-name=ping   --user {{ managed_node_user }} --private-key {{ control_node_private_key_file }} --inventory {{ inventory_hostname }}, {{ inventory_hostname }}"
+    - "Add these lines to file ansible.cfg [defaults] section: 'remote_user = {{ managed_node_user }}' and 'private_key_file = {{ control_node_private_key_file }}'."
+    - "Now try this."
+    - "  ansible --module-name=ping  --inventory {{ inventory_hostname }}, {{ inventory_hostname }}"
 ....
+
+Create a sudoers.d template file. 
 
 .ansible/roles/ansible-target/templates/sudoers
 [source,yaml]

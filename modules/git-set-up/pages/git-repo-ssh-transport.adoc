@@ -1,0 +1,21 @@
+= clone using SSH
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 25-09-2021
+
+
+== which network transport 
+
+There are a few ways to set up authentication and file transfer. 
+We could use NFS, web, SSH or git's own protocol, also called git. 
+Which access protocol is the easiest to set up?
+
+We want multiple locations to access git over the network. This git service will be accessed from other guest machines. That means setting up a service to handle network transport. There are a few choices -  which is best? 
+(spoiler - it's SSH)
+
+* simple file-based repository with NFS. A file-based repo is a local solution, not a network solution. Install NFS to share the same files among many machines. Allow NFS traffic on firewalls.
+* dumb HTTP service. Install Apache, then set up read-only HTTP access for reading. Doesn't handle writing - that requires another service. Allow web traffic on firewalls.
+* smart HTTP service. Install Apache, then configure a new site with WebDAV read/write access. Open firewalls.
+* git. Practically no work to do, and practically no security either - allow the world to read and write everything. Make sure git's in a trusted place and open git port 9418 on firewalls.
+* SSH. There's no install work to do because it's already running. And no security work either, because SSH handles access control and traffic encryption. SSH port 22 is already open on firewalls. 
+

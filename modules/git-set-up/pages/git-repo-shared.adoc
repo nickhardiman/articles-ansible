@@ -150,18 +150,77 @@ These tasks are repeated for every new git repo.
 [source,shell]
 ....
 [nick@guest1 ~]$ sudo su - scm
-[nick@guest1 ~]$ sudo su - scm
 Last login: Mon Oct 18 22:52:34 BST 2021 on pts/0
 [scm@guest1 ~]$ cd /var/git
+....
+
+Use main, not master. 
+Create the _content1_ repo. 
+
+[source,shell]
+....
+[scm@guest1 git]$ git config --global init.defaultBranch main
+[scm@guest1 git]$ 
 [scm@guest1 git]$ NEW_REPO=content1.git
 [scm@guest1 git]$ git init --bare $NEW_REPO
 Initialized empty Git repository in /var/git/content1.git/
 [scm@guest1 git]$ 
-[scm@guest1 git]$ ls 
-content1.git
+[scm@guest1 git]$ ls -a content1.git/
+.  ..  HEAD  branches  config  description  hooks  info  objects  refs
 [scm@guest1 git]$ 
+....
+
+Done. 
+
+[source,shell]
+....
 [scm@guest1 git]$ exit
 logout
 [nick@guest1 ~]$ 
 ....
+
+
+== add your public key to git's list of authorized keys
+
+The only security check with this method is being allowed to SSH to scm@guest1.
+
+??? was ssh-keygen mentioned before
+
+SSH refuses to work if any old geezer has permission to look at files. 
+
+[source,shell]
+.... 
+[root@guest1 ~]# mkdir /home/scm/.ssh
+[root@guest1 ~]# chmod 700 /home/scm/.ssh
+[root@guest1 ~]# 
+[root@guest1 ~]# cat  /home/nick/.ssh/id_rsa.pub >> /home/scm/.ssh/authorized_keys
+[root@guest1 ~]# chmod 600 /home/scm/.ssh/authorized_keys
+[root@guest1 ~]# 
+....
+
+Fix ownership. 
+
+[source,shell]
+.... 
+[root@guest1 ~]# chown -R scm.scm /home/scm/.ssh/
+[root@guest1 ~]# 
+....
+
+Check 
+
+
+[nick@guest1 .ssh]$ ssh scm@guest1
+The authenticity of host 'guest1 (192.168.1.13)' can't be established.
+ED25519 key fingerprint is SHA256:8WmPHx/gQ8J+Zvn8pBZSuV3hQCF/jyKvpcu5LYEAqsY.
+This key is not known by any other names
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added 'guest1' (ED25519) to the list of known hosts.
+Register this system with Red Hat Insights: insights-client --register
+Create an account or view all your systems at https://red.ht/insights-dashboard
+Last login: Fri Mar  4 09:06:59 2022
+[scm@guest1 ~]$ 
+[scm@guest1 ~]$ exit
+logout
+Connection to guest1 closed.
+[nick@guest1 .ssh]$ 
 
