@@ -29,7 +29,7 @@ I did all the work in my home lab using this combination of hardware and softwar
 
 
 
-=== physical machine 
+== physical machine 
 
 I did have to buy the hardware. 
 The software is all included with a free https://developers.redhat.com/[Developer Subscription].
@@ -41,7 +41,7 @@ image::asus-pn50.jpeg[hardware,width=600,title="ASUS PN50"]
 * OS software - https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux[Red Hat Enterprise Linux] 8
 * application software - all included with a https://developers.redhat.com/[Developer Subscription]
 
-=== virtual machines 
+== virtual machines 
 
 .guest interfaces and addresses
 [%header,format=csv]

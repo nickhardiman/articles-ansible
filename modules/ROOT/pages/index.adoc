@@ -1,4 +1,4 @@
-= infrastructure as code
+= Ansible 
 Nick Hardiman <nick@silvan.uk>
 :source-highlighter: highlight.js
 :revdate: 26-09-2021
@@ -11,18 +11,6 @@ These docs have nothing to do with any https://docs.ansible.com/[official Ansibl
 ====
 
 
-== this site 
-
-components 
-
-* https://nickhardiman.netlify.app/fedora-on-rpi4/dev/index.html[Fedora on a Raspberry Pi 4]
-* https://nickhardiman.netlify.app/infrastructure-as-code/dev/index.html[Infrastructure as code]
-* https://nickhardiman.netlify.app/rhel8-on-pn50/dev/index.html[RHEL 8 on an ASUS PN50]
-* https://nickhardiman.netlify.app/ocp4-on-pn50/dev/index.html[OCP4 on an ASUS PN50]
-
-
-== this component 
-
 Articles cover sysadmin tasks like these.  
 
 * Git
@@ -30,59 +18,6 @@ Articles cover sysadmin tasks like these.
 * Ansible Core 
  
 All these articles have examples to run, so you can learn by doing. Hands on a keyboard. Break it and fix it. 
-
-
-== my home lab
-
-I did all the work in my home lab using this combination of hardware and software.
-
-.libvirt networks and guests 
-[a2s,libvirt-test-network-4]
-....
-                       KVM/libvirt
-
- host machine          networks                                                    guest machines
-
-
-+--------------+      .----------.
-|              |      |          |
-| host1        +------| pubbr1   |-----------------+-------------------+------------------+-------------------+------+
-|              |      |          |                 |                   |                  |                   |               
-+--------------+      .----------.                 |                   |                  |                   |              
-                                                   |                   |                  |                   |             
-                                           +------------+      +------------+      +------------+      +------------+     
-                                           |            |      |            |      |            |      |            |    
-                                           | controller1|      | jenkins1   |      | git1       |      | managed1   |     
-                                           |            |      |            |      |            |      |            |     
-                                           +------------+      +------------+      +------------+      +------------+     
-....
-
-
-
-=== physical machine 
-
-I did have to buy the hardware. 
-The software is all included with a free https://developers.redhat.com/[Developer Subscription].
-
-image::asus-pn50.jpeg[hardware,width=600,title="ASUS PN50"]
-
-* hardware - https://www.asus.com/Displays-Desktops/Mini-PCs/PN-PB-series/Mini-PC-PN50/[ASUS PN50, with 1TB SSD and 64GB pair of SODIMMS]
-* firmware - ASUS
-* OS software - https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux[Red Hat Enterprise Linux] 8
-* application software - all included with a https://developers.redhat.com/[Developer Subscription]
-
-=== virtual machines 
-
-.guest interfaces and addresses
-[%header,format=csv]
-|===
-name,       interface, MAC, IP, domain
-*public0*,     *pubbr0*, 52:54:00:00:00:01, 192.168.1.1,  lab.example.com
-managed1,        eth0,   52:54:00:00:00:11, 192.168.1.11, lab.example.com
-git1,            eth0,   52:54:00:00:00:13, 192.168.1.13, lab.example.com
-controller1,     eth0,   52:54:00:00:00:16, 192.168.1.16, lab.example.com
-jenkins1,        eth0,   52:54:00:00:00:18, 192.168.1.18, lab.example.com
-|===
 
 
 
@@ -101,5 +36,5 @@ Thousands of modules are included to manage Linux, Windows, on-premise network k
 == get in touch
 
 Something wrong? 
-https://github.com/nickhardiman/articles-iac/issues[Open an issue on GitHub].
+https://github.com/nickhardiman/articles-ansible/issues[Open an issue on GitHub].
 
