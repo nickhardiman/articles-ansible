@@ -1,0 +1,56 @@
+= infrastructure stack 
+Nick Hardiman <nick@silvan.uk>
+:source-highlighter: highlight.js
+:revdate: 17-05-2022
+
+
+I did all the work in my home lab using this combination of hardware and software.
+
+.libvirt networks and guests 
+[a2s,libvirt-test-network-4]
+....
+                       KVM/libvirt
+
+ host machine          networks                     guest machines
+
+
++--------------+      .----------.
+|              |      |          |
+| host1        +------| pubbr1   |-----------------+-------------------+------------------+-------------------+------+
+|              |      |          |                 |                   |                  |                   |               
++--------------+      .----------.                 |                   |                  |                   |              
+                                                   |                   |                  |                   |             
+                                           +------------+      +------------+      +------------+      +------------+     
+                                           |            |      |            |      |            |      |            |    
+                                           | controller1|      | jenkins1   |      | git1       |      | managed1   |     
+                                           |            |      |            |      |            |      |            |     
+                                           +------------+      +------------+      +------------+      +------------+     
+....
+
+
+
+=== physical machine 
+
+I did have to buy the hardware. 
+The software is all included with a free https://developers.redhat.com/[Developer Subscription].
+
+image::asus-pn50.jpeg[hardware,width=600,title="ASUS PN50"]
+
+* hardware - https://www.asus.com/Displays-Desktops/Mini-PCs/PN-PB-series/Mini-PC-PN50/[ASUS PN50, with 1TB SSD and 64GB pair of SODIMMS]
+* firmware - ASUS
+* OS software - https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux[Red Hat Enterprise Linux] 8
+* application software - all included with a https://developers.redhat.com/[Developer Subscription]
+
+=== virtual machines 
+
+.guest interfaces and addresses
+[%header,format=csv]
+|===
+name,       interface, MAC, IP, domain
+*public0*,     *pubbr0*, 52:54:00:00:00:01, 192.168.1.1,  lab.example.com
+managed1,        eth0,   52:54:00:00:00:11, 192.168.1.11, lab.example.com
+git1,            eth0,   52:54:00:00:00:13, 192.168.1.13, lab.example.com
+controller1,     eth0,   52:54:00:00:00:16, 192.168.1.16, lab.example.com
+jenkins1,        eth0,   52:54:00:00:00:18, 192.168.1.18, lab.example.com
+|===
+

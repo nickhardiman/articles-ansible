@@ -1,4 +1,4 @@
-= install Jenkins
+= configure Jenkins
 Nick Hardiman 
 :source-highlighter: highlight.js
 :revdate: 16-10-2021

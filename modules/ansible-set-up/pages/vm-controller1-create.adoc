@@ -3,16 +3,30 @@ Nick Hardiman
 :source-highlighter: highlight.js
 :revdate: 13-10-2021
 
-Create the Ansible controller node. 
+Build a virtual machine to put Ansible on. 
+This machine will become the Ansible 
+https://docs.ansible.com/ansible/latest/network/getting_started/basic_concepts.html#control-node[control node]. 
+This machine's full name is controller1.lab.example.com. 
 
-Use a *fresh install* process (AKA clean install, or install from scratch). 
-Build a VM (Virtual Machine), install OS software and install application software.  
-A tool called _virt-install_ builds the machine, and a tool called anaconda uses the kickstart file to install software. 
+Building the machine is done by running one command from the CLI, _virt_install_. 
+It is a pretty complicated command. 
+The command needs a few resources to do its work, including libvirt, a RHEL installer ISO, and a Red Hat Kickstart definition file.
+The command creates a storage file, and XML configuration that describes the machine, and a libvirt domain.
 
-The control machine has two interfaces, not one. 
+This is the start of the infrastructure build, so there are a bunch of things we can't do. 
+
+* We don't automate the VM build by handing a definition file to a server provisioning tool. We could, but we're not going to. This is a manual process because it's the first build, and we need to practice the manual process before turning it into an automated process. 
+* We can't automate the VM build using Ansible. There is no Ansible yet. 
+* We can't check code into our git repository. Someone else's git repo, like GitHub, GitLab or https://bitbucket.org/[BitBucket]. 
+
+
+
+== the virtual machine 
+
+The controller1 machine has two interfaces, not one. 
 One interface leads to the home network and onto the Internet, and the other leads to the private network. 
 
-.control has one interface
+.controller1 has one interface
 ....
   |  
   | Internet
@@ -28,11 +42,17 @@ One interface leads to the home network and onto the Internet, and the other lea
   |
 +-+-------------------------------------+
 | enp1s0                                |
-|    control.lab.example.com            |
+|    controller1.lab.example.com        |
 |                                       |
 +---------------------------------------+
 ....
 
+
+== the install process 
+
+Use a *fresh install* process (AKA clean install, or install from scratch). 
+Build a VM (Virtual Machine), install OS software and install application software.  
+A tool called _virt-install_ builds the machine, and a tool called anaconda uses the kickstart file to install software. 
 
 
 == prerequisites 
@@ -40,8 +60,7 @@ One interface leads to the home network and onto the Internet, and the other lea
 Two things are required before the _virt-install_ command is run. 
 
 * RHEL 8 install ISO. This file is __/var/lib/libvirt/images/rhel-8.3-x86_64-dvd.iso__. It's in libvirt's _images_ pool. 
-* kickstart file. The file is __/home/nick/ansible/control.ks__.
-
+* kickstart file. The file is __/home/nick/ansible/controller1.ks__.
 
 
 == install the virt-install command 
@@ -78,7 +97,7 @@ And virt-install options are listed one per line.
 
 [source,shell]
 ....
-HOST=control
+HOST=controller1
 NEW_DISK=/var/lib/libvirt/images/$HOST.qcow2
 INSTALL_ISO=/var/lib/libvirt/images/rhel-8.3-x86_64-dvd.iso
 KICKSTART_CONFIG=/home/nick/ansible/$HOST.ks
@@ -106,7 +125,7 @@ The default values for CPU cores and memory are overridden here by the `--vcpus`
 The command `osinfo-query os` lists all the values that can go in here. 
 * The two _--network_ options give the VM two network interfaces.
 * The _--extra-args_ text _console=ttyS0,115200_ connects the console to the serial port.  
-* The kickstart file is loaded by the _--initrd-inject_ option and used by the _--extra-args_ text _inst.ks=file:/control.ks_.
+* The kickstart file is loaded by the _--initrd-inject_ option and used by the _--extra-args_ text _inst.ks=file:/controller1.ks_.
 
 Normally, after executing this command, the console would appear and show all the install messages.
 But here the _--noautoconsole_ option stops that happening.  
@@ -121,7 +140,7 @@ Copy and paste the variables and virt-install command into a terminal.
 
 [source,shell]
 ----
-[root@host1 ~]# HOST=control
+[root@host1 ~]# HOST=controller1
 ...
 [root@host1 ~]# virt-install \
 >   --name="$HOST" \
@@ -131,7 +150,7 @@ Copy and paste the variables and virt-install command into a terminal.
 Starting install...
 Retrieving file vmlinuz...                        | 8.5 MB  00:00:00     
 Retrieving file initrd.img...                     |  63 MB  00:00:00     
-Allocating 'control.qcow2'                         |  50 GB  00:00:00     
+Allocating 'controller1.qcow2'                         |  50 GB  00:00:00     
 Domain installation still in progress. You can reconnect to 
 the console to complete the installation process.
 [root@host1 ~]# 
@@ -150,15 +169,15 @@ If something goes wrong, remove your additions.
 [source,shell]
 ....
 [root@host1 ~]# virsh destroy $HOST
-Domain control destroyed
+Domain controller1 destroyed
 
 [root@host1 ~]# 
 [root@host1 ~]# virsh undefine --nvram $HOST 
-Domain control has been undefined
+Domain controller1 has been undefined
 
 [root@host1 ~]# 
 [root@host1 ~]#  virsh vol-delete $HOST.qcow2 --pool images
-Vol control.qcow2 deleted
+Vol controller1.qcow2 deleted
 
 [root@host1 ~]# 
 ....
@@ -175,7 +194,7 @@ Hundreds of lines scroll by for two minutes.
 [source,shell]
 ....
 [root@host1 ~]# virsh console $HOST
-Connected to domain control
+Connected to domain controller1
 Escape character is ^]
 [    3.630006] Freeing initrd memory: 64952K
 [    3.630623] PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
@@ -274,7 +293,7 @@ After install completes, the machine is off.
 [root@host1 ~]# virsh list --all
  Id   Name        State
 -----------------------------
- 1    control     shut off
+ 1    controller1     shut off
 
 [root@host1 ~]# 
 ....
@@ -284,7 +303,7 @@ Turn it on.
 [source,shell]
 ....
 [root@host1 ~]# virsh start $HOST
-Domain control started
+Domain controller1 started
 
 [root@host1 ~]# 
 ....
@@ -298,23 +317,23 @@ The kickstart file defines root's password as _Password;1_.
 [source,shell]
 ....
 [root@host1 ~]# virsh console $HOST
-Connected to domain control
+Connected to domain controller1
 Escape character is ^]
 
 Red Hat Enterprise Linux 8.2 (Ootpa)
 Kernel 4.18.0-193.el8.x86_64 on an x86_64
 
-control login: root
+controller1 login: root
 Password: 
-[root@control ~]# 
+[root@controller1 ~]# 
 ....
 
-Disconnect from the console with the control and right square bracket keys 
+Disconnect from the console with the controller1 and right square bracket keys 
 kbd:[Ctrl + ++]++ ] 
 
 [source,shell]
 ....
-[root@control ~]# ^]
+[root@controller1 ~]# ^]
 [root@host1 ~]# 
 ....
 
@@ -326,7 +345,7 @@ It's a graceful shutdown, unlike _virsh destroy_ which is like pulling the plug.
 [source,shell]
 ....
 [root@host1 ~]# virsh shutdown $HOST
-Domain control is being shutdown
+Domain controller1 is being shutdown
 
 [root@host1 ~]# 
 ....

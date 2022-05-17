@@ -1,9 +1,12 @@
-= create a kickstart file for control 
+= create a kickstart file for controller1 
 Nick Hardiman
 :source-highlighter: highlight.js
 :revdate: 11-01-2021
 
-Create a kickstart file for the virtual machine _control_.
+The virtual machine _controller1_ is the platform we build on.
+Create a file to define how the operating system should organize the resources - how to partition the disk, what extra RPM packages to install, user accounts to create and so on. 
+This definition file is a Red Hat Kickstart file named controller1.ks.
+
 This machine will be built using a *fresh install* build process, as opposed to a golden image build process. 
 
 This procedure is similar to xref:rhel8-on-pn50:virtual-machine:guest1-kickstart-file.adoc[].
