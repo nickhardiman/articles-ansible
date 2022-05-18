@@ -5,7 +5,5 @@
 ** xref:vm-controller1-create.adoc[]
 ** xref:ansible-repo-enable.adoc[]
 ** xref:ansible-rpm-install.adoc[]
-** xref:ansible-user-add.adoc[]
-** xref:ansible-user-add-playbook.adoc[]
 ** xref:platform-python-examine.adoc[]
 ** xref:ansible-hosts-file-examine.adoc[]

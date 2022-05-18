@@ -23,7 +23,7 @@ Don't set it up on the control node.
 |                                                      |
 |                                                      |
 |   +-------------------+       +-------------------+  |
-|   |  guest1           |       | guest2            |  |
+|   | controller1       |       | managed1          |  |
 |   |   control node    |       |   managed node    |  |
 |   |                   | SSH   |                   |  |
 |   |              nick +------>|ansible_user       |  |
@@ -38,17 +38,16 @@ But that's the way many provisioning systems work.
 
 .ansible SSH from guest to host 
 ....
-.---------------------------------.  
-|  host1                          |
-|                                 |
-|   +----------+                  |
-|   |          |                  |
-|   |  guest1  |                  |
-|   |          |                  |
-|   |  nick ---+---> ansible_user |
-|   |          |                  |
-|   +----------+                  |
-.---------------------------------.  
+.--------------------------------------.  
+|  host1                               |
+|                                      |
+|   +---------------+                  |
+|   | controller1   |                  |
+|   |               |                  |
+|   |       nick ---+---> ansible_user |
+|   |               |                  |
+|   +---------------+                  |
+.--------------------------------------.  
 ....
 
 

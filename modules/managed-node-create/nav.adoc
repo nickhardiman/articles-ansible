@@ -1,2 +1,6 @@
 * xref:index.adoc[]
+** xref:vm-managed1.adoc[]
+** xref:ansible-user-add.adoc[]
+** xref:ansible-user-add-playbook.adoc[]
+
 
