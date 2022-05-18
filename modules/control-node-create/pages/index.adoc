@@ -1,4 +1,4 @@
-= set up Ansible
+= create a control node
 Nick Hardiman 
 :source-highlighter: highlight.js
 :revdate: 12-10-2021

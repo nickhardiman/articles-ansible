@@ -1,4 +1,4 @@
-= skeleton
+= create a managed node
 Nick Hardiman 
 :source-highlighter: highlight.js
 :revdate: 01-01-2021
