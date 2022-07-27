@@ -9,7 +9,7 @@ This definition file is a Red Hat Kickstart file named controller1.ks.
 
 This machine will be built using a *fresh install* build process, as opposed to a golden image build process. 
 
-This procedure is similar to xref:rhel8:virtual-machine:guest1-kickstart-file.adoc[].
+This procedure is similar to xref:rhel:virtual-machine:guest1-kickstart-file.adoc[].
 
 
 == create a kickstart file
