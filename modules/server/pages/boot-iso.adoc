@@ -1,7 +1,7 @@
 = customize a boot ISO
 Nick Hardiman 
 :source-highlighter: highlight.js
-:revdate: 01-01-2021
+:revdate: 05-08-2022
 
 Playbook creates a bootable customized Kickstart ISO file. 
 See slide 15 and a few later ones in
@@ -34,3 +34,7 @@ https://access.redhat.com/solutions/60959
 == copy to a USB
 
 == boot from the USB
+
+== install the OS
+
+
