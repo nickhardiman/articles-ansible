@@ -1,0 +1,7 @@
+= server
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 05-08-2022
+
+
+Install RHEL 9 on the physical server host1.

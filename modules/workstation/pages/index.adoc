@@ -1,0 +1,8 @@
+= skeleton
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 01-01-2021
+
+Install Ansible on the workstation.
+
+Only required for making the customized boot ISO.

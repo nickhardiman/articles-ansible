@@ -1,0 +1,36 @@
+= customize a boot ISO
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 01-01-2021
+
+Playbook creates a bootable customized Kickstart ISO file. 
+See slide 15 and a few later ones in
+https://github.com/nickhardiman/summit_OD1226/blob/main/OD1226-Breakout-session-slides-Summit-22.pdf
+
+Worth doing this? 
+
+=== pros 
+
+More in keeping with the automation vibe
+
+
+=== cons 
+
+More grief than clicking through the graphical installer
+
+Requires a working Ansible env on the workstation
+
+
+== build 
+
+Like
+https://github.com/nickhardiman/summit_OD1226/blob/main/ansible_playbooks/iso_build/main.yml
+but use Red Hat CDN. 
+
+How to create a modified Red Hat Enterprise Linux ISO with kickstart file or modified installation media?
+https://access.redhat.com/solutions/60959
+
+
+== copy to a USB
+
+== boot from the USB
