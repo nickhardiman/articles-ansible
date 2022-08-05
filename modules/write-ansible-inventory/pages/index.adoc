@@ -4,3 +4,5 @@ Nick Hardiman
 :revdate: 12-10-2021
 
 Write Ansible inventory.
+
+About 10 examples on GitHub. PLaybook https://github.com/nickhardiman/ansible-examples/blob/master/inventory-empty.yml and others starting with _inventory_. 

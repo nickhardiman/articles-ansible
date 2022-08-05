@@ -1,0 +1,43 @@
+= add a YAML inventory
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 12-10-2021
+
+
+== create the ansible-target playbook 
+
+Create a directory named ansible. 
+
+Add a config file. 
+
+.ansible/ansible.cfg
+[source,ini]
+....
+[defaults]
+inventory=inventory
+....
+
+
+
+Add an inventory. 
+
+.ansible/inventory/inventory.yml 
+[source,yaml]
+....
+all:
+  children:
+    ungrouped:
+      hosts: 
+        vm-host: 
+          ansible_host: 192.168.122.1
+....
+
+[source,shell]
+....
+ansible
+├── ansible.cfg
+├── ansible-target.yml
+└── inventory
+    └── inventory.yml
+....
+
