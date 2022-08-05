@@ -1,0 +1,61 @@
+= why
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 01-01-2021
+
+Experiment with Ansible and a free developer subscription in a home lab. 
+
+You've already gone through https://hardiman.consulting/rhel/9/ so you already have a home lab and know a lot about manual configuration. 
+Now do it the automated way. 
+
+
+== why Ansible?
+
+Ansible, chef, puppet and saltstack are the big names in general-purpose automation and management. 
+
+good and bad
+
+=== pros 
+
+Easy to get started. 
+
+No coding skills required. 
+Puppet is a bit too Ruby.
+
+Integrates with lots 
+
+Does network automation, server, OS, application automation.
+
+Globally popular, plenty of help available.
+
+Good fit with modern architectures like DDD, IaC and CI/CD.
+
+No agents 
+
+Ansible Galaxy beats Puppet Forge
+
+
+=== cons 
+
+Puppet is still king. 
+
+Can be slower than terraform.
+
+If you know chef, puppet or saltstack, why switch?
+
+
+== why a developer subscription? 
+
+A Red Hat subscription provides expert help. 
+That includes bug fixes, security fixes, product upgrades, helpdesk support, documentation and software downloads. 
+
+The Developer Subscription is a self-service account for individuals.
+
+It's everything except the helpdesk support so it's aimed at development work, not production work. 
+If you break your platform, you fix it with the help of the community rather than with the help of Red Hat support teams. 
+
+== why a home lab? 
+
+When you run your own home lab, the entire technology stack is under your control. That’s a good thing, because you’ve got the freedom to tear anything down. And it’s a bad thing, because the responsibility to make it work again rests only on you. Expect both reward and frustration.
+
+

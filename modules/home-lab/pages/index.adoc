@@ -1,0 +1,9 @@
+= home lab
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 01-01-2021
+
+Experiment with Ansible and a free developer subscription in a home lab. 
+
+You've already gone through https://hardiman.consulting/rhel/9/ so you already have a home lab and know a lot about manual configuration. 
+
