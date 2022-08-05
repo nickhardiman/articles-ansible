@@ -24,7 +24,7 @@ nav:
 - modules/home-lab/nav.adoc 
 - modules/workstation/nav.adoc 
 - modules/server/nav.adoc 
-- modules/control-node-create/nav.adoc 
+- modules/control-node/nav.adoc 
 - modules/managed-node-create/nav.adoc 
 - modules/git-set-up/nav.adoc 
 - modules/write-ansible-playbooks/nav.adoc 

@@ -3,8 +3,12 @@ Nick Hardiman
 :source-highlighter: highlight.js
 :revdate: 12-10-2021
 
-Set up Ansible Engine.
+The https://docs.ansible.com/ansible/latest/network/getting_started/basic_concepts.html#control-node[control node] hosts Ansible tools and manages Ansible work. 
 
+These docs create a VM and configure it to be a control node. 
+The node could also be a container. 
+
+!!! Ansible Engine is RHEL 8
 
 == Red Hat Ansible Engine
 

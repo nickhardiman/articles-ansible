@@ -1,5 +1,4 @@
 * xref:index.adoc[]
-** xref:infrastructure-stack.adoc[]
 ** xref:prerequisites.adoc[]
 ** xref:vm-controller1-kickstart.adoc[]
 ** xref:vm-controller1-create.adoc[]
