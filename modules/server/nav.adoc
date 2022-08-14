@@ -1,5 +1,4 @@
 * xref:index.adoc[]
 ** xref:infrastructure-stack.adoc[]
-** xref:boot-iso.adoc[]
+** xref:boot-iso-install.adoc[]
 ** xref:hypervisor.adoc[]
-
