@@ -4,8 +4,19 @@ Nick Hardiman
 :revdate: 05-08-2022
 
 Playbook creates a bootable customized Kickstart ISO file. 
+
+I wrote something similar for my Summit talk. 
+
+== Summit talk 
+
+Description
+
 See slide 15 and a few later ones in
 https://github.com/nickhardiman/summit_OD1226/blob/main/OD1226-Breakout-session-slides-Summit-22.pdf
+
+playbook 
+
+https://github.com/nickhardiman/summit_OD1226/tree/main/ansible_playbooks/iso_build
 
 == why 
 
