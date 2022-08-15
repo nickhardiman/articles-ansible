@@ -1,0 +1,65 @@
+= install Ansible on macOS
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 05-08-2022
+
+
+== install Ansible 2.11
+
+A Python virtualenv containing Ansible is a ridiculous number of files. 
+If your documents folder is synchronized to a remote store like iCloud, create the virtualenv somewhere else. 
+
+[source,shell]
+----
+cd ~
+----
+
+Create and use a new virtualenv. 
+This creates a new directory and fills it with about 500 files (try `find venv-for-ansible-2.11 -type f | wc -l`)
+
+[source,shell]
+----
+python3 -m venv venv-for-ansible-2.11
+source venv-for-ansible-2.11/bin/activate
+----
+
+Activate makes a few changes to the session, including creating a shell function called _deactivate_. 
+Viewt this with the command `whence -f deactivate`.
+The deactivate function resets the path, prompt, and variables to what they were before using the virtualenv.
+
+Update pip, add supporting packages
+
+[source,shell]
+----
+pip install --upgrade pip
+pip install wheel
+----
+
+Install ansible. 
+
+Running `pip install ansible-core` installs the latest version, not the earlier v2.11.
+
+[source,shell]
+----
+pip install ansible-core==2.11
+----
+
+Check. 
+
+[source,shell]
+----
+ansible --version
+----
+
+Stop using the virtualenv. 
+
+[source,shell]
+----
+deactivate
+----
+
+==  remove
+pip uninstall ansible-c
+# test
+cd ~/ansible-examples
+
