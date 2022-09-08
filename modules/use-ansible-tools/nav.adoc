@@ -6,3 +6,4 @@
 ** xref:tool-ansible-config.adoc[]
 ** xref:tool-ansible-console.adoc[]
 ** xref:tool-ansible-doc.adoc[]
+** xref:tool-ansible-navigator.adoc[]
