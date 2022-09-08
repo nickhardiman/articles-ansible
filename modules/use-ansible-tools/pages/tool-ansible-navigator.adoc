@@ -136,7 +136,7 @@ Copying blob 67d8ef478732 done
 Copying blob 50223de3f59a [===>-----------------------------] 25.6MiB / 199.5MiB
 ----
 
-The OS stores a local copy of the container (have a look at /var/lib/containers/storage/overlay/).
+The OS stores a local copy of the container (try grep /etc/containers).
 
 [source,shell]
 ----
@@ -166,3 +166,47 @@ Name: shell (module)
  40│    use your best judgement.
 ^b/PgUp page up    ^f/PgDn page down    ↑↓ scroll    esc back    :help help
 ----
+
+
+== stdout or interactive interface 
+
+[source,shell]
+----
+ansible-navigator doc shell --mode stdout
+----
+
+== image pull policy
+
+Default pull policy is tag, so any image tagged with latest is always pulled. 
+For more information, see https://ansible-navigator.readthedocs.io/en/latest/settings/[settings].
+
+[source,shell]
+----
+ansible-navigator doc shell --pull-policy missing
+----
+
+== "ansible-navigator run" is like "ansible-playbook"
+
+Run a simple ping playbook.
+Use the locally stored image by setting a different pull policy. 
+Don't use the interactive interface. 
+
+[source,shell]
+----
+[root@host2 ~]# ansible-navigator run ansible/ping-playbook.yml --mode stdout  --pull-policy=missing
+[WARNING]: provided hosts list is empty, only localhost is available. Note that
+the implicit localhost does not match 'all'
+
+PLAY [localhost] ***************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [ping] ********************************************************************
+ok: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+[root@host2 ~]# 
+----
+
