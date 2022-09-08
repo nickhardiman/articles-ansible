@@ -5,7 +5,7 @@ Nick Hardiman
 
 Use ansible tools. 
 
-The ansible package installs a bunch of utilities in /usr/bin/. 
+The _ansible_ package installs a bunch of utilities in /usr/bin/. 
 These are listed and the first few have examples. 
 
 
