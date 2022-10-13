@@ -1,3 +1,5 @@
 * xref:index.adoc[]
 ** xref:install-macos.adoc[]
 ** xref:boot-iso-create.adoc[]
+** xref:vim-use.adoc[]
+** xref:vim-plugin-ansible-vim.adoc[]
