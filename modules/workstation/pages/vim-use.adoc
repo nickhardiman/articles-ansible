@@ -78,6 +78,8 @@ This one-liner makes it easier to edit YAML files.
 [source,shell]
 ----
 [nick@host1 ~]$ cat .vimrc
+" You can find this line in some Red Hat training courses.
+" Check out the example at https://vim.fandom.com/wiki/Example_vimrc
 autocmd FileType yaml setlocal ai sw=2 ts=2 et cuc
 [nick@host1 ~]$ 
 ----
