@@ -79,10 +79,8 @@ https://github.com/cloudalchemy/ansible-prometheus/
 
 Get latest release details from GitHub and extract a couple values.
 
-
 [source,YAML]
 ----
-# get latest release version from GitHub
 - name: Get latest release
   uri:
     url: "https://api.github.com/repos/prometheus/prometheus/releases/latest"
@@ -100,7 +98,7 @@ Get latest release details from GitHub and extract a couple values.
     prometheus_version: "{{ _latest_release.json.tag_name[1:] }}"
 ----
 
- 
+
 Get the matching SHA256 checksum. 
 
 [source,YAML]
@@ -118,11 +116,11 @@ Get the matching SHA256 checksum.
     - "('linux-amd64.tar.gz') in item"
 ----
 
+
 === download 
 
 Download the archive of binaries from GitHub. 
 For an alternative approach, see GitHub's command line tool  https://cli.github.com/manual/gh_release_download[gh]. 
-
 
 [source,YAML]
 ----
@@ -133,6 +131,7 @@ For an alternative approach, see GitHub's command line tool  https://cli.github.
     dest: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
     checksum: "sha256:{{ __prometheus_checksum }}"
 ----
+
 
 == use jq to get  the download URL 
 
