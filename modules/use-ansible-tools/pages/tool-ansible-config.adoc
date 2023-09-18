@@ -44,3 +44,17 @@ It's an INI file containing nothing but headers, comments and blank lines.
 [nick@host1 ~]$ 
 ----
 
+!!!
+
+PAGER='cat' ansible-config dump
+
+ansible-navigator  config dump  
+
+no interactive, no color
+ansible-navigator  --mode=stdout --display-color=false config dump  
+
+redirect to file? 
+this hangs
+ansible-navigator  --mode=stdout --display-color=false config dump > dump.txt 
+
+ansible-navigator  --mode=stdout --display-color=false config list

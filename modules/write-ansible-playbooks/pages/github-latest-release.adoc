@@ -75,7 +75,9 @@ How Cloud Alchemy guys do it.
 
 This code is based on their work. 
 The Cloud Alchemy role is here. 
-https://github.com/cloudalchemy/ansible-prometheus/
+
+* https://galaxy.ansible.com/cloudalchemy/prometheus
+* https://github.com/cloudalchemy/ansible-prometheus/
 
 Get latest release details from GitHub and extract a couple values.
 
