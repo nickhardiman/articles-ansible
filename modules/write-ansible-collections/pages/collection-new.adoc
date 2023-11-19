@@ -13,7 +13,7 @@ includes
 * role 
 * playbook
 
-build a new collection framework
+Build a new collection framework.
 [source,shell]
 ----
 ssh nick@test.build.example.com
@@ -22,16 +22,21 @@ cd /home/nick/ansible/collections/ansible_collections
 ansible-galaxy collection init my_namespace.my_collection
 ----
 
-add a role
+Add a role.
 [source,shell]
 ----
 cd /home/nick/ansible/collections/ansible_collections/my_namespace/my_collection/roles/my_role/tasks/
 ansible-galaxy role init my_role
+----
+
+Add a task to the role.
+[source,shell]
+----
 cd my_role/tasks
 echo -e "- name: Say hello\n  debug:\n    msg: Hello\n" >> main.yml 
 ----
 
-add a test playbook
+Add a test playbook to the collection.
 [source,shell]
 ----
 cd /home/nick/ansible/collections/ansible_collections/my_namespace/my_collection/
@@ -47,7 +52,16 @@ echo '
 ' >  playbooks/test.yml
 ----
 
-test
+Test.
+This should work from anywhere.
+[source,shell]
+----
+ANSIBLE_COLLECTIONS_PATH=/home/nick/ansible/collections \
+  ansible-playbook my_namespace.my_collection.test
+----
+
+transcript
+
 [source,shell]
 ----
 [nick@test.build.example.com ~]$ ANSIBLE_COLLECTIONS_PATH=/home/nick/ansible/collections ansible-playbook my_namespace.my_collection.test
@@ -66,4 +80,3 @@ localhost                  : ok=1    changed=0    unreachable=0    failed=0    s
 
 [nick@test.build.example.com ~]$ 
 ----
-
