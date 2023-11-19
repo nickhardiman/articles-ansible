@@ -1,0 +1,7 @@
+= write Ansible collections
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 19-11-2023
+
+Write Ansible collections.
+

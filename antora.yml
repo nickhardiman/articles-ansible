@@ -29,6 +29,7 @@ nav:
 - modules/git-set-up/nav.adoc 
 - modules/write-ansible-playbooks/nav.adoc 
 - modules/write-ansible-inventory/nav.adoc 
+- modules/write-ansible-collections/nav.adoc 
 - modules/use-ansible-modules/nav.adoc 
 - modules/use-ansible-tools/nav.adoc 
 - modules/use-ansible-plugins/nav.adoc 

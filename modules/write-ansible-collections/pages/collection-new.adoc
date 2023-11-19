@@ -1,0 +1,69 @@
+= write an Ansible collection
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 19-11-2023
+
+Build a simple Ansible collection.
+
+
+== make a new collection 
+
+includes 
+
+* role 
+* playbook
+
+build a new collection framework
+[source,shell]
+----
+ssh nick@test.build.example.com
+mkdir -p /home/nick/ansible/collections/ansible_collections
+cd /home/nick/ansible/collections/ansible_collections
+ansible-galaxy collection init my_namespace.my_collection
+----
+
+add a role
+[source,shell]
+----
+cd /home/nick/ansible/collections/ansible_collections/my_namespace/my_collection/roles/my_role/tasks/
+ansible-galaxy role init my_role
+cd my_role/tasks
+echo -e "- name: Say hello\n  debug:\n    msg: Hello\n" >> main.yml 
+----
+
+add a test playbook
+[source,shell]
+----
+cd /home/nick/ansible/collections/ansible_collections/my_namespace/my_collection/
+mkdir playbooks
+echo '
+---
+- name: Say hello
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  roles:
+    - name: my_namespace.my_collection.my_role
+' >  playbooks/test.yml
+----
+
+test
+[source,shell]
+----
+[nick@test.build.example.com ~]$ ANSIBLE_COLLECTIONS_PATH=/home/nick/ansible/collections ansible-playbook my_namespace.my_collection.test
+[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does
+not match 'all'
+
+PLAY [localhost] **********************************************************************************************
+
+TASK [my_namespace.my_collection.my_role : Say hello] *********************************************************
+ok: [localhost] => {
+    "msg": "Hello"
+}
+
+PLAY RECAP ****************************************************************************************************
+localhost                  : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+[nick@test.build.example.com ~]$ 
+----
+
