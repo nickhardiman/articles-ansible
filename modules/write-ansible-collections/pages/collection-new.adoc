@@ -25,7 +25,7 @@ ansible-galaxy collection init my_namespace.my_collection
 Add a role.
 [source,shell]
 ----
-cd /home/nick/ansible/collections/ansible_collections/my_namespace/my_collection/roles/my_role/tasks/
+cd /home/nick/ansible/collections/ansible_collections/my_namespace/my_collection/roles/
 ansible-galaxy role init my_role
 ----
 
