@@ -35,33 +35,273 @@ Successfully installed MarkupSafe-1.1.1 ansible-2.9.9 ansible-lint-4.2.0 cffi-1.
 (ansible-venv) [nick@guest1 ~]$ 
 ----
 
+== install from the Ansible repo 
+
+[source,shell]
+----
+dnf --enablerepo=ansible-automation-platform-2.4-for-rhel-9-x86_64-rpms install ansible-lint
+----
 
 
-== check current directory 
+== check ansible-lint
 
-Run ``ansible-lint``. With no options, it checks everything in the current directory.
+[source,shell]
+----
+[nick@dev lint-test]$ ansible-lint --version
+ansible-lint 6.14.3 using ansible 2.14.9
+... big pause while it fails to contact Github  ... 
+[nick@dev lint-test]$ 
+----
+
+ansible-lint checks Github to see if a later version is available.
+
+[source,shell]
+----
+[root@dev.build.example.com ~]# source ./lab-build-proxy.sh 
+[root@dev.build.example.com ~]# 
+[root@dev.build.example.com ~]# ansible-lint --version
+ansible-lint 6.14.3 using ansible 2.14.9
+A new release of ansible-lint is available: 6.14.3 → 6.22.2
+[root@dev.build.example.com ~]# 
+----
+
+
+== check all files 
+
+Run ``ansible-lint``. 
+With no options, it checks everything in the current directory and in subdirectories.
 
 Several complaints are displayed. 
 
 [source,shell]
 ----
-[nick@guest1 ~]$ cd ansible
-[nick@guest1 ansible]$ 
-[nick@guest1 ansible]$ ansible-lint 
-[201] Trailing whitespace
-ansible-target.yml:2
-- name: ansible-target test 
+[nick@dev ~]$ cd /home/nick/ansible/playbook/lint-test/playbooks
+[nick@dev playbooks]$ 
+[nick@dev playbooks]$ ls
+date-after.yml   date-whitespace.yml  var-case.yml
+date-before.yml  module-blocked.yml
+[nick@dev playbooks]$ 
+[nick@dev playbooks]$ ansible-lint 
+WARNING  Listing 40 violation(s) that are fatal
+name[play]: All plays should be named.
+date-before.yml:2
+
 ...
-[703] Should change default metadata: author
-roles/ansible-target/meta/main.yml:1
-{'meta/main.yml': {'galaxy_info': {'author': 'your name', 'description': 'your role description', 'company': 'your company (optional)', 'license': 'license (GPL-2.0-or-later, MIT, etc)', 'min_ansible_version': 2.9, 'galaxy_tags': [], '__line__': 1, '__file__': '/home/nick/ansible/roles/ansible-target/meta/main.yml'}, 'dependencies': [], '__line__': 1, '__file__': '/home/nick/ansible/roles/ansible-target/meta/main.yml', 'skipped_rules': []}}
+
+yaml[colons]: Too many spaces after colon
+date-whitespace.yml:2
+
+...
+
+command-instead-of-shell: Use shell only when shell functionality is required.
+module-blocked.yml:6 Task/Handler: Shell is not OK
+
+...
+                         Rule Violation Summary                         
+ count tag                        profile    rule associated tags       
+     1 command-instead-of-shell   basic      command-shell, idiom       
+     4 name[missing]              basic      idiom                      
+
+...
+
+     3 yaml[truthy]               basic      formatting, yaml           
+     1 no-changed-when            shared     command-shell, idempotency 
+     4 fqcn[action-core]          production formatting                 
+
+Failed after min profile: 40 failure(s), 0 warning(s) on 5 files.
+[nick@dev playbooks]$ 
+----
+
+
+
+== make a test file
+
+./home/nick/ansible/playbook/lint-test/date-before.yml
+[source,yaml]
+----
+---
+- hosts: localhost
+  gather_facts: yes
+  tasks:
+  - debug: 
+      var: ansible_date_time.iso8601
+  - debug: 
+      var: ansible_date_time.date
+
+- hosts: localhost
+  gather_facts: no
+  tasks:
+  - debug: 
+      var: now()
+  - debug: 
+      var: now(utc=true)
 ...
 ----
 
-The many messages are in two groups.  
 
-* trailing whitespace, in files ansible-target.yml and roles/ansible-target/tasks/main.yml.
-* default metadata, in roles/ansible-target/meta/main.yml
+== check a file before making changes
+
+
+[source,shell]
+----
+[nick@dev playbooks]$ ansible-lint ./date-before.yml 
+WARNING  Listing 19 violation(s) that are fatal
+name[play]: All plays should be named.
+date-before.yml:2
+
+yaml[truthy]: Truthy value should be one of [false, true]
+date-before.yml:3
+
+....
+
+yaml[empty-lines]: Too many blank lines (1 > 0)
+date-before.yml:18
+
+Read documentation for instructions on how to ignore specific rule violations.
+
+                   Rule Violation Summary                    
+ count tag                   profile    rule associated tags 
+     4 name[missing]         basic      idiom                
+     2 name[play]            basic      idiom                
+     1 yaml[empty-lines]     basic      formatting, yaml     
+     2 yaml[indentation]     basic      formatting, yaml     
+     4 yaml[trailing-spaces] basic      formatting, yaml     
+     2 yaml[truthy]          basic      formatting, yaml     
+     4 fqcn[action-core]     production formatting           
+
+Failed after min profile: 19 failure(s), 0 warning(s) on 1 files.
+[nick@dev playbooks]$ 
+[nick@dev playbooks]$ echo $?
+2
+[nick@dev playbooks]$ 
+----
+
+Same thing, compact
+
+[source,shell]
+----
+[nick@dev lint-test]$ ansible-lint  playbooks/date-before.yml  -p
+WARNING  Listing 19 violation(s) that are fatal
+playbooks/date-before.yml:2: name[play]: All plays should be named.
+playbooks/date-before.yml:3: yaml[truthy]: Truthy value should be one of 
+playbooks/date-before.yml:5: fqcn[action-core]: Use FQCN for builtin module actions (debug).
+playbooks/date-before.yml:5: name[missing]: All tasks should be named.
+playbooks/date-before.yml:5: yaml[trailing-spaces]: Trailing spaces
+playbooks/date-before.yml:5: yaml[indentation]: Wrong indentation: expected at least 3
+playbooks/date-before.yml:7: fqcn[action-core]: Use FQCN for builtin module actions (debug).
+playbooks/date-before.yml:7: name[missing]: All tasks should be named.
+playbooks/date-before.yml:7: yaml[trailing-spaces]: Trailing spaces
+playbooks/date-before.yml:10: name[play]: All plays should be named.
+playbooks/date-before.yml:11: yaml[truthy]: Truthy value should be one of 
+playbooks/date-before.yml:13: fqcn[action-core]: Use FQCN for builtin module actions (debug).
+playbooks/date-before.yml:13: name[missing]: All tasks should be named.
+playbooks/date-before.yml:13: yaml[trailing-spaces]: Trailing spaces
+playbooks/date-before.yml:13: yaml[indentation]: Wrong indentation: expected 4 but found 2
+playbooks/date-before.yml:15: fqcn[action-core]: Use FQCN for builtin module actions (debug).
+playbooks/date-before.yml:15: name[missing]: All tasks should be named.
+playbooks/date-before.yml:15: yaml[trailing-spaces]: Trailing spaces
+playbooks/date-before.yml:18: yaml[empty-lines]: Too many blank lines (1 > 0)
+Read documentation for instructions on how to ignore specific rule violations.
+
+                   Rule Violation Summary                    
+ count tag                   profile    rule associated tags 
+     4 name[missing]         basic      idiom                
+     2 name[play]            basic      idiom                
+     1 yaml[empty-lines]     basic      formatting, yaml     
+     2 yaml[indentation]     basic      formatting, yaml     
+     4 yaml[trailing-spaces] basic      formatting, yaml     
+     2 yaml[truthy]          basic      formatting, yaml     
+     4 fqcn[action-core]     production formatting           
+
+----
+
+
+== ignore empty line errors by creating an ignore file
+
+[source,shell]
+----
+[nick@dev lint-test]$ cd playbooks/
+[nick@dev playbooks]$ cd ..
+[nick@dev lint-test]$ vim ansible-lint-ignore-empty-lines.yml 
+----
+
+[source,shell]
+----
+# This file contains ignores rule violations for ansible-lint
+playbooks/date-before.yml yaml[empty-lines]
+----
+
+[source,shell]
+----
+# This file contains ignores rule violations for ansible-lint
+date-before.yml yaml[empty-lines]
+----
+
+[source,shell]
+----
+[nick@dev lint-test]$ ansible-lint -i ansible-lint-ignore-empty-lines.yml playbooks/date-before.yml -p
+WARNING  Listing 1 violation(s) marked as ignored, likely already known
+playbooks/date-before.yml:18: yaml[empty-lines]: Too many blank lines (1 > 0) (warning)
+WARNING  Listing 18 violation(s) that are fatal
+playbooks/date-before.yml:2: name[play]: All plays should be named.
+playbooks/date-before.yml:3: yaml[truthy]: Truthy value should be one of 
+playbooks/date-before.yml:5: fqcn[action-core]: Use FQCN for builtin module actions (debug).
+...
+----
+
+Create an ignore file for everything
+
+[source,shell]
+----
+nick@dev lint-test]$ ansible-lint playbooks/date-before.yml --generate-ignore
+WARNING  Listing 19 violation(s) that are fatal
+name[play]: All plays should be named.
+playbooks/date-before.yml:2
+...
+[nick@dev lint-test]$ 
+----
+
+
+[source,shell]
+----
+[nick@dev lint-test]$ cat .ansible-lint-ignore 
+# This file contains ignores rule violations for ansible-lint
+playbooks/date-before.yml fqcn[action-core]
+playbooks/date-before.yml name[missing]
+playbooks/date-before.yml name[play]
+playbooks/date-before.yml yaml[empty-lines]
+playbooks/date-before.yml yaml[indentation]
+playbooks/date-before.yml yaml[trailing-spaces]
+playbooks/date-before.yml yaml[truthy]
+[nick@dev lint-test]$ 
+----
+
+
+[source,shell]
+----
+[nick@dev lint-test]$ ansible-lint playbooks/date-before.yml -p
+WARNING  Listing 19 violation(s) marked as ignored, likely already known
+playbooks/date-before.yml:2: name[play]: All plays should be named. (warning)
+playbooks/date-before.yml:3: yaml[truthy]: Truthy value should be one of  (warning)
+...
+playbooks/date-before.yml:15: yaml[trailing-spaces]: Trailing spaces (warning)
+playbooks/date-before.yml:18: yaml[empty-lines]: Too many blank lines (1 > 0) (warning)
+...
+playbooks/date-before.yml:18: yaml[empty-lines]: Too many blank lines (1 > 0) (warning)
+
+Passed with production profile: 0 failure(s), 19 warning(s) on 1 files.
+[nick@dev lint-test]$ 
+[nick@dev lint-test]$ echo $?
+0
+[nick@dev lint-test]$ 
+----
+
+[source,shell]
+----
+[nick@dev lint-test]$ rm .ansible-lint-ignore 
+[nick@dev lint-test]$ 
+----
+
 
 == use tags
 
@@ -69,19 +309,39 @@ Rule number 201, the one that produced the 'trailing whitespace' complaint, is t
 
 [source,shell]
 ----
-[nick@guest1 ansible]$ ansible-lint -T | grep 201
-ANSIBLE0002 ['[201]']
-formatting ['[204]', '[203]', '[202]', '[205]', '[201]', '[104]', '[206]']
-[nick@guest1 ansible]$ 
+[nick@dev lint-test]$ ansible-lint -T
+# List of tags and rules they cover
+command-shell:  # Specific to use of command and shell modules
+  - command-instead-of-module
+...
+  - syntax-check
+yaml:  # External linter which will also produce its own rule codes
+  - yaml
+
+[nick@dev lint-test]$ 
 ----
 
-Ignore rule 201
+Ignore formatting
+
+[source,shell]
 ----
-ansible-lint -x 201
-----
-Ignore all formatting checks. 
-----
-ansible-lint -x formatting
+[nick@dev lint-test]$ ansible-lint playbooks/date-before.yml -p -x formatting
+WARNING  Listing 6 violation(s) that are fatal
+playbooks/date-before.yml:2: name[play]: All plays should be named.
+playbooks/date-before.yml:5: name[missing]: All tasks should be named.
+playbooks/date-before.yml:7: name[missing]: All tasks should be named.
+playbooks/date-before.yml:10: name[play]: All plays should be named.
+playbooks/date-before.yml:13: name[missing]: All tasks should be named.
+playbooks/date-before.yml:15: name[missing]: All tasks should be named.
+Read documentation for instructions on how to ignore specific rule violations.
+
+              Rule Violation Summary              
+ count tag           profile rule associated tags 
+     4 name[missing] basic   idiom                
+     2 name[play]    basic   idiom                
+
+Failed after min profile: 6 failure(s), 0 warning(s) on 1 files.
+[nick@dev lint-test]$
 ----
 
 
@@ -89,54 +349,27 @@ ansible-lint -x formatting
 
 Location of rule files is displayed in the help.
 
+Half of these are rule files ++(*.py) and half are document files (*.md)++.
+
 [source,shell]
 ----
-(ansible-venv) [nick@guest1 ~]$ ansible-lint  -h
+[nick@dev lint-test]$ ls /usr/lib/python3.9/site-packages/ansiblelint/rules
+args.md                       latest.py             no_same_owner.py
+args.py                       literal_compare.md    no_tabs.md
+avoid_implicit.md             literal_compare.py    no_tabs.py
 ...
-  -R                    Use default rules in /home/nick/ansible-
-                        venv/lib64/python3.8/site-packages/ansiblelint/rules
-...
+key_order.md                  no_relative_paths.md  var_naming.py
+key_order.py                  no_relative_paths.py  yaml.md
+latest.md                     no_same_owner.md      yaml_rule.py
+[nick@dev lint-test]$ 
+[nick@dev lint-test]$ ls -1 /usr/lib/python3.9/site-packages/ansiblelint/rules | wc -l
+96
+[nick@dev lint-test]$ 
 ----
 
 The code for rule _[201] Trailing whitespace_ is in file ``site-packages/ansiblelint/rules/TrailingWhitespaceRule.py``.
 
 
-
-== fix errors 
-
-Most of these files were created by the ``ansible-galaxy`` command.
-ansible-lint is complaining about the meta/main.yml. 
-It wasn't touched because it isn't required yet, so ansible-lint does not like the default layout. 
-The file can be edited or deleted - either is fine. 
-
-[source]
-....
-ansible-target/
-├── defaults
-│   └── main.yml <-- edited
-├── handlers
-│   └── main.yml
-├── meta
-│   └── main.yml
-├── README.md
-├── tasks
-│   └── main.yml <-- edited
-├── templates
-│   └── sudoers <-- added
-├── tests
-│   ├── inventory
-│   └── test.yml
-└── vars
-    └── main.yml
-....
-
-Clean up and try again. 
-
-....
-rm roles/ansible-target/meta/main.yml 
-rmdir roles/ansible-target/meta/
-ansible-lint
-....
 
 == commit fixes 
 
@@ -148,4 +381,53 @@ Commit your code and post it to the central repo.
 git status
 git commit -am 'ansible-lint'
 git push
+----
+
+
+
+== fix the file
+
+I want to keep both before and after versions. 
+I copied the original from date-before.yml to date-after.yml.
+Then I fixed the issues.
+
+./home/nick/ansible/playbook/lint-test/date-after.yml
+[source,yaml]
+----
+---
+- name: Display date with ansible_date_time
+  hosts: localhost
+  gather_facts: true
+  tasks:
+    - name: ISO
+      ansible.builtin.debug:
+        var: ansible_date_time.iso8601
+    - name: Date
+      ansible.builtin.debug:
+        var: ansible_date_time.date
+
+- name: Display date with Jinja2 now function
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Now function
+      ansible.builtin.debug:
+        var: now()
+    - name: Now function
+      ansible.builtin.debug:
+        var: now(utc=true)
+...
+----
+
+
+== check a file after making changes
+
+[source,shell]
+----
+[nick@dev lint-test]$ ansible-lint playbooks/date-after.yml 
+
+Passed with production profile: 0 failure(s), 0 warning(s) on 1 files.
+[nick@dev lint-test]$ echo $?
+0
+[nick@dev lint-test]$ 
 ----

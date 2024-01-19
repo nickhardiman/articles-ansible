@@ -58,22 +58,33 @@ The ansible-lint tool finds more problems with a playbook than yamllint does.
 
 [source,shell]
 ----
-[nick@dev ~]$ yamllint /home/nick/ansible/playbook/lint-test/date-before.yml 
-/home/nick/ansible/playbook/lint-test/date-before.yml
-  3:17      warning  truthy value should be one of [false, true]  (truthy)
-  5:3       error    wrong indentation: expected at least 3  (indentation)
-  5:11      error    trailing spaces  (trailing-spaces)
-  7:11      error    trailing spaces  (trailing-spaces)
-  11:17     warning  truthy value should be one of [false, true]  (truthy)
-  13:3      error    wrong indentation: expected 4 but found 2  (indentation)
-  13:11     error    trailing spaces  (trailing-spaces)
-  15:11     error    trailing spaces  (trailing-spaces)
-  18:1      error    too many blank lines (1 > 0)  (empty-lines)
+[nick@dev playbooks]$ ansible-lint ./date-before.yml 
+WARNING  Listing 19 violation(s) that are fatal
+name[play]: All plays should be named.
+date-before.yml:2
 
-[nick@dev ~]$ 
-[nick@dev ~]$ echo $?
-1
-[nick@dev ~]$ 
+...
+
+yaml[empty-lines]: Too many blank lines (1 > 0)
+date-before.yml:18
+
+Read documentation for instructions on how to ignore specific rule violations.
+
+                   Rule Violation Summary                    
+ count tag                   profile    rule associated tags 
+     4 name[missing]         basic      idiom                
+     2 name[play]            basic      idiom                
+     1 yaml[empty-lines]     basic      formatting, yaml     
+     2 yaml[indentation]     basic      formatting, yaml     
+     4 yaml[trailing-spaces] basic      formatting, yaml     
+     2 yaml[truthy]          basic      formatting, yaml     
+     4 fqcn[action-core]     production formatting           
+
+Failed after min profile: 19 failure(s), 0 warning(s) on 1 files.
+[nick@dev playbooks]$ 
+[nick@dev playbooks]$ echo $?
+2
+[nick@dev playbooks]$ 
 ----
 
 
