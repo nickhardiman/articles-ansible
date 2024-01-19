@@ -2,6 +2,7 @@
 ** xref:tool-ansible.adoc[]
 ** xref:tool-ansible-playbook.adoc[]
 ** xref:tool-ansible-lint.adoc[]
+** xref:tool-yamllint.adoc[]
 ** xref:tool-molecule.adoc[]
 ** xref:tool-ansible-config.adoc[]
 ** xref:tool-ansible-console.adoc[]

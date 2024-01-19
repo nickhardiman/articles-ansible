@@ -1,0 +1,283 @@
+= use yamllint 
+Nick Hardiman
+:source-highlighter: highlight.js
+:revdate: 19-01-2024
+
+== install with dnf
+
+https://yamllint.readthedocs.io/en/latest/quickstart.html#installing-yamllint
+
+Installing ansible-lint also installs yamllint.
+
+[source,shell]
+----
+[nick@dev ~]$ sudo dnf install yamllint
+[sudo] password for nick: 
+Updating Subscription Management repositories.
+Red Hat Enterprise Linux 9 for x86_64 - AppStre  41 kB/s | 4.5 kB     00:00    
+Red Hat Enterprise Linux 9 for x86_64 - BaseOS   51 kB/s | 4.1 kB     00:00    
+Package yamllint-1.30.0-1.el9ap.noarch is already installed.
+Dependencies resolved.
+Nothing to do.
+Complete!
+[nick@dev ~]$ 
+----
+
+== make a test file
+
+./home/nick/ansible/playbook/lint-test/date-before.yml
+[source,yaml]
+----
+---
+- hosts: localhost
+  gather_facts: yes
+  tasks:
+  - debug: 
+      var: ansible_date_time.iso8601
+  - debug: 
+      var: ansible_date_time.date
+
+- hosts: localhost
+  gather_facts: no
+  tasks:
+  - debug: 
+      var: now()
+  - debug: 
+      var: now(utc=true)
+...
+----
+
+
+== check a file before making changes
+
+yamllint checks the file against all its rules.
+
+The ansible-lint tool finds more problems with a playbook than yamllint does.
+
+7 errors and 2 warnings
+
+[source,shell]
+----
+[nick@dev ~]$ yamllint /home/nick/ansible/playbook/lint-test/date-before.yml 
+/home/nick/ansible/playbook/lint-test/date-before.yml
+  3:17      warning  truthy value should be one of [false, true]  (truthy)
+  5:3       error    wrong indentation: expected at least 3  (indentation)
+  5:11      error    trailing spaces  (trailing-spaces)
+  7:11      error    trailing spaces  (trailing-spaces)
+  11:17     warning  truthy value should be one of [false, true]  (truthy)
+  13:3      error    wrong indentation: expected 4 but found 2  (indentation)
+  13:11     error    trailing spaces  (trailing-spaces)
+  15:11     error    trailing spaces  (trailing-spaces)
+  18:1      error    too many blank lines (1 > 0)  (empty-lines)
+
+[nick@dev ~]$ 
+[nick@dev ~]$ echo $?
+1
+[nick@dev ~]$ 
+----
+
+
+
+
+== ignore empty line errors by extending the default config
+
+Create a new file.
+
+[source,shell]
+----
+[nick@dev lint-test]$ vim yamllint-config-extend-default.yml 
+----
+
+This is merged with the default config, and makes two changes. 
+The _empty-lines_ attribute is changed from _enabled_ to _disabled_.
+The severity of _trailing-spaces_ is changed from _error_ to _warning_. 
+
+[source,yaml]
+----
+# https://yamllint.readthedocs.io/en/latest/configuration.html
+
+extends: default
+
+rules:
+  # change from default value
+  # empty-lines: disable
+  # to
+  empty-lines: disable
+  trailing-spaces: 
+    level: warning
+----
+
+2 errors and 6 warnings
+
+[source,shell]
+----
+[nick@dev lint-test]$ yamllint -d ./yamllint-config-extend-default.yml ./date-before.yml
+./date-before.yml
+  3:17      warning  truthy value should be one of [false, true]  (truthy)
+  5:3       error    wrong indentation: expected at least 3  (indentation)
+  5:11      warning  trailing spaces  (trailing-spaces)
+  7:11      warning  trailing spaces  (trailing-spaces)
+  11:17     warning  truthy value should be one of [false, true]  (truthy)
+  13:3      error    wrong indentation: expected 4 but found 2  (indentation)
+  13:11     warning  trailing spaces  (trailing-spaces)
+  15:11     warning  trailing spaces  (trailing-spaces)
+
+[nick@dev lint-test]$ 
+----
+
+Same thing, but don't display warnings.
+
+[source,shell]
+----
+[nick@dev lint-test]$ yamllint --config-data ./yamllint-config-extend-default.yml ./date-before.yml --no-warnings
+./date-before.yml
+  5:3       error    wrong indentation: expected at least 3  (indentation)
+  13:3      error    wrong indentation: expected 4 but found 2  (indentation)
+
+[nick@dev lint-test]$ 
+----
+
+Yamllint can display the output as records with colon separated fields.
+Yamllint won't output JSON.
+
+[source,shell]
+----
+[nick@dev lint-test]$ yamllint --config-data ./yamllint-config-extend-default.yml ./date-before.yml --no-warnings --format parsable
+./date-before.yml:5:3: [error] wrong indentation: expected at least 3 (indentation)
+./date-before.yml:13:3: [error] wrong indentation: expected 4 but found 2 (indentation)
+[nick@dev lint-test]$ 
+----
+
+
+== use the relaxed configuration, not default
+
+[source,shell]
+----
+[nick@dev lint-test]$ yamllint -d relaxed ./date-before.yml 
+./date-before.yml
+  5:11      error    trailing spaces  (trailing-spaces)
+  7:11      error    trailing spaces  (trailing-spaces)
+  13:11     error    trailing spaces  (trailing-spaces)
+  15:11     error    trailing spaces  (trailing-spaces)
+  18:1      warning  too many blank lines (1 > 0)  (empty-lines)
+
+[nick@dev lint-test]$ 
+----
+
+
+== ignore empty line errors by replacing the default config
+
+Create a new file.
+
+[source,shell]
+----
+[nick@dev lint-test]$ vim yamllint-config-custom-full.yml 
+----
+
+This is a copy of the default config, with only one change. 
+The empty-lines attribute is changed from enabled to disabled.
+
+[source,yaml]
+----
+---
+yaml-files:
+  - '*.yaml'
+  - '*.yml'
+  - '.yamllint'
+
+rules:
+  anchors: enable
+  braces: enable
+  brackets: enable
+  colons: enable
+  commas: enable
+  comments:
+    level: warning
+  comments-indentation:
+    level: warning
+  document-end: disable
+  document-start:
+    level: warning
+  # change from default value
+  # empty-lines: disable
+  # to
+  empty-lines: disable
+  empty-values: disable
+  float-values: disable
+  hyphens: enable
+  indentation: enable
+  key-duplicates: enable
+  key-ordering: disable
+  line-length: enable
+  new-line-at-end-of-file: enable
+  new-lines: enable
+  octal-values: disable
+  quoted-strings: disable
+  trailing-spaces: enable
+  truthy:
+    level: warning
+----
+
+Run.
+
+[source,shell]
+----
+[nick@dev lint-test]$ yamllint -c ./yamllint-config-custom-full.yml ./date-before.yml
+./date-before.yml
+  3:17      warning  truthy value should be one of [false, true]  (truthy)
+  5:3       error    wrong indentation: expected at least 3  (indentation)
+  5:11      error    trailing spaces  (trailing-spaces)
+  7:11      error    trailing spaces  (trailing-spaces)
+  11:17     warning  truthy value should be one of [false, true]  (truthy)
+  13:3      error    wrong indentation: expected 4 but found 2  (indentation)
+  13:11     error    trailing spaces  (trailing-spaces)
+  15:11     error    trailing spaces  (trailing-spaces)
+
+[nick@dev lint-test]$ 
+----
+
+
+
+== fix the file
+
+I want to keep both before and after versions. 
+I copied the original from date-before.yml to date-after.yml.
+Then I fixed the issues.
+
+./home/nick/ansible/playbook/lint-test/date-after.yml
+[source,yaml]
+----
+---
+- name: Display date with ansible_date_time
+  hosts: localhost
+  gather_facts: true
+  tasks:
+    - name: ISO
+      ansible.builtin.debug:
+        var: ansible_date_time.iso8601
+    - name: Date
+      ansible.builtin.debug:
+        var: ansible_date_time.date
+
+- name: Display date with Jinja2 now function
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Now function
+      ansible.builtin.debug:
+        var: now()
+    - name: Now function
+      ansible.builtin.debug:
+        var: now(utc=true)
+...
+----
+
+== check a file after making changes
+
+[source,shell]
+----
+yamllint /home/nick/ansible/playbook/lint-test/date-after.yml 
+[nick@dev ~]$ echo $?
+0
+[nick@dev ~]$ 
+----
