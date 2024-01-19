@@ -8,6 +8,24 @@ Use ansible tools.
 The _ansible_ package installs a bunch of utilities in /usr/bin/. 
 These are listed and the first few have examples. 
 
+. ansible             
+. ansible-builder     
+. ansible-config      
+. ansible-connection  
+. ansible-console     
+. ansible-doc         
+. ansible-galaxy      
+. ansible-inventory   
+. ansible-lint        
+. ansible-navigator   
+. ansible-playbook    
+. ansible-pull        
+. ansible-runner
+. ansible-test
+. ansible-vault
+. molecule
+. yamllint https://yamllint.readthedocs.io/en/latest/
+
 
 == utilities 
 

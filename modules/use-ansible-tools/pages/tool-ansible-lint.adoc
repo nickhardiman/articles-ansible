@@ -37,7 +37,7 @@ Successfully installed MarkupSafe-1.1.1 ansible-2.9.9 ansible-lint-4.2.0 cffi-1.
 
 
 
-== use 
+== check current directory 
 
 Run ``ansible-lint``. With no options, it checks everything in the current directory.
 
@@ -62,6 +62,8 @@ The many messages are in two groups.
 
 * trailing whitespace, in files ansible-target.yml and roles/ansible-target/tasks/main.yml.
 * default metadata, in roles/ansible-target/meta/main.yml
+
+== use tags
 
 Rule number 201, the one that produced the 'trailing whitespace' complaint, is tagged as _formatting__.
 
