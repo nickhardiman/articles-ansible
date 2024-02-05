@@ -1,0 +1,8 @@
+= run in WSL (Windows Subsystem for Linux)
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 19-11-2023
+
+== links
+
+https://learn.microsoft.com/en-us/windows/wsl/install

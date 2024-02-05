@@ -8,6 +8,23 @@ Use ansible-lint, a checker.
 The _ansible-lint_ tool is not included in the _ansible_ RPM package, so it is not available.
 The first job is to install ansible-lint.
 
+== links 
+
+https://github.com/ansible/ansible-lint/issues/1812
+
+https://ansible.readthedocs.io/projects/lint/usage/
+
+https://github.com/ansible/ansible-lint/blob/main/.ansible-lint#L40
+
+https://www.ansible.com/blog/creating-custom-rules-for-ansible-lint
+
+https://ansible.readthedocs.io/projects/lint/configuring/#ansible-lint-configuration
+
+https://ansible.readthedocs.io/projects/lint/rules/var-naming/
+
+https://ansible.readthedocs.io/projects/lint/usage/#using-commands
+
+https://github.com/ssato/ansible-lint-custom-
 
 
 == install with pip

@@ -6,25 +6,34 @@ Nick Hardiman
 Use ansible tools. 
 
 The _ansible_ package installs a bunch of utilities in /usr/bin/. 
-These are listed and the first few have examples. 
+
+This list includes both user tools and developer tools.
 
 . ansible             
 . ansible-builder     
+. ansible-compat
 . ansible-config      
 . ansible-connection  
-. ansible-console     
+. ansible-console    
+. ansible-creator 
+. ansible-dev-environment
 . ansible-doc         
 . ansible-galaxy      
 . ansible-inventory   
-. ansible-lint        
-. ansible-navigator   
+. https://github.com/ansible-community/ansible-lint[ansible-lint]        
+. https://github.com/ansible/ansible-navigator[ansible-navigator]   
+. https://github.com/ansible/ansible-language-server[ansible-language-server]
 . ansible-playbook    
 . ansible-pull        
 . ansible-runner
 . ansible-test
 . ansible-vault
-. molecule
-. yamllint https://yamllint.readthedocs.io/en/latest/
+. creator-ee
+. https://github.com/ansible-community/molecule[molecule]
+. pytest-ansible
+. tox-ansible
+. https://github.com/ansible/vscode-ansible[vscode-ansible]
+. https://yamllint.readthedocs.io/en/latest/[yamllint]
 
 
 == utilities 
