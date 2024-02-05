@@ -6,3 +6,5 @@ Nick Hardiman
 == links
 
 https://learn.microsoft.com/en-us/windows/wsl/install
+
+https://github.com/nickhardiman/articles-aap/blob/main/modules/integrate/pages/ms-wsl.adoc

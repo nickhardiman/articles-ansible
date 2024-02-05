@@ -26,6 +26,8 @@ https://ansible.readthedocs.io/projects/lint/usage/#using-commands
 
 https://github.com/ssato/ansible-lint-custom-
 
+https://developers.redhat.com/articles/2023/08/28/how-ansible-lint-improves-playbook-debugging
+
 
 == install with pip
 
