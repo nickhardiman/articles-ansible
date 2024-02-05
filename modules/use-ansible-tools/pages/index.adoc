@@ -24,7 +24,7 @@ This list includes both user tools and developer tools.
 . https://github.com/ansible/ansible-navigator[ansible-navigator]   
 . https://github.com/ansible/ansible-language-server[ansible-language-server]
 . ansible-playbook    
-. ansible-pull        
+. https://docs.ansible.com/ansible/latest/cli/ansible-pull.html[ansible-pull]        
 . ansible-runner
 . ansible-test
 . ansible-vault

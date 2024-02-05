@@ -1,0 +1,306 @@
+= VScode (Microsoft Visual Studio Code)
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 05-02-2024
+
+Use vscode on the workstation.
+Use the SSH extension to connect to a remote RHEL host. 
+Use a Python virtual environment to install ansible tools on the RHEL host. 
+Ansible tools includes ansible-lint.
+
+
+== links 
+
+https://developers.redhat.com/articles/2023/02/14/remote-container-development-vs-code-and-podman#install_podman_desktop_on_the_local_machine
+
+https://code.visualstudio.com/docs/remote/remote-overview
+
+https://marketplace.visualstudio.com/items?itemName=redhat.ansible
+
+https://www.ansible.com/blog/deep-dive-on-ansible-vscode-extension
+
+
+
+== install VScode
+
+https://code.visualstudio.com/
+https://code.visualstudio.com/download
+
+
+== extension - ansible 
+
+see
+vscode-ansible-extension-notes.adoc
+
+
+
+== extension - remote SSH
+
+https://code.visualstudio.com/docs/remote/ssh
+
+install remote development extension pack in vscode
+
+Verify you can connect to the SSH host
+terminal > new terminal
+
+[source,shell]
+....
+ssh nick@my-ansible-controller.lab.example.com
+exit
+....
+
+open Command Palette
+F1 (or ⇧⌘P)
+
+start typing
+Remote-SSH: Connect to Host...
+
+copy ssh user@host
+nick@my-ansible-controller.lab.example.com
+
+A new window opens
+On remote machine, new folder ~/.vscode-server
+downloads
+
+message in folder explorer - connected to remote.
+message in bottom status bar - SSH: my-ansible-controller.lab.example.com
+
+open folder
+do you trust the authors of the files in this folder?
+
+
+=== add host to SSH config
+
+open new window
+file > new window (or ⇧⌘N)
+
+open Command Palette
+F1 (or ⇧⌘P)
+
+"recently used" at top
+Remote-SSH: Connect to Host...
+
+Add new SSH host ...
+ssh nick@my-ansible-controller.lab.example.com
+
+Select SSH configuration file to update
+/Users/nickhardiman/.ssh/config
+popup window Host added!
+
+Connect
+
+Adds these lines to /Users/nickhardiman/.ssh/config
+[source,shell]
+....
+Host my-ansible-controller.lab.example.com
+  HostName my-ansible-controller.lab.example.com
+  User nick
+....
+
+
+=== remote host my-ansible-controller
+
+articles on my-ansible-controller are published from github to
+/home/nick/docs-site/build/site/
+symlink to /var/www/my-ansible-controller.lab.example.com/
+see
+/Users/nickhardiman/Documents/tech/product/antora/antora-notes.txt
+
+
+== git add, commit, push
+
+commit
+vscode asks you set user name and email
+[source,shell]
+....
+git config --global user.name "Nick Hardiman"
+git config --global user.email nick.hardiman@mailservice.com
+....
+
+
+push
+a few security checks and login to github
+
+box opens asking about periodically running git fetch
+
+
+=== SSH config file
+
+https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack
+
+Remote Explorer > SSH targets >
+uses
+/Users/nhardima/.ssh/config
+
+likes entries like these
+
+[source,shell]
+....
+Host lab-control
+  HostName control.4583.example.com
+  User nick
+
+Host bastion.be49.example.com
+  HostName bastion.be49.example.com
+  User nick
+....
+
+doesn't like entries like these.
+Is the wildcard a problem?
+
+[source,shell]
+....
+Host *.work.com
+  GSSAPIAuthentication yes
+  GSSAPIDelegateCredentials no
+
+Host *.4583.internal
+  ProxyJump nick@control.4583.example.com
+  User ec2-user
+  IdentityFile ~/.ssh/4583key.pem
+....
+
+
+
+https://www.ansible.com/blog/deep-dive-on-ansible-vscode-extension
+
+
+
+== ansible file association
+
+https://code.visualstudio.com/docs/languages/overview#_can-i-map-additional-file-extensions-to-a-language
+
+
+
+
+== install ansible tools on rhel 9 using RPM
+
+on RHEL host
+[source,shell]
+....
+  sudo -i
+  # install
+  dnf --enablerepo=ansible-automation-platform-2.4-for-rhel-9-x86_64-rpms update
+  dnf --enablerepo=ansible-automation-platform-2.4-for-rhel-9-x86_64-rpms install ansible-navigator
+  dnf --enablerepo=ansible-automation-platform-2.4-for-rhel-9-x86_64-rpms install ansible-lint
+....
+
+
+== use ansible-lint on a Mac workstation
+
+VScode on Mac can't find it. 
+on Mac
+[source,shell]
+....
+  # edit the extension settings 
+  vim  /Users/nickhardiman/Library/Application\ Support/Code/User/settings.json
+   # add the executable path
+      "ansible.ansibleLint.path": "/usr/bin/ansible"
+....
+
+== install ansible in a venv on rhel 9
+
+[source,shell]
+....
+sudo dnf install python3-pip
+dnf info ansible-core | grep Version
+# don't run as root
+python3.11 -m venv /home/nick/venv-for-ansible-core-2.15.4
+source /home/nick/venv-for-ansible-core-2.15.4/bin/activate
+pip install --upgrade pip
+pip install wheel
+pip install ansible-core==2.15.4
+pip install ansible-lint
+....
+
+== use ansible venv in vscode
+
+vscode > settings > ansible.python.activationScript
+
+
+== install ansible-lint on rhel 9 using pip
+
+https://ansible-lint.readthedocs.io/
+https://www.redhat.com/sysadmin/ansible-lint
+https://www.redhat.com/sysadmin/python-venv-ansible
+
+Don't use the latest. 
+``pip3 install ansible-lint`` installed /usr/bin/ansible-lint v6.14.3 but crashed on use.
+
+No need to install package. 
+https://github.com/ansible/ansible-lint/issues/3408
+[source,shell]
+....
+  sudo dnf install --enablerepo=ansible-automation-platform-2.4-for-rhel-9-x86_64-rpms ansible-lint
+....
+
+Use pip but no venv.
+
+[source,shell]
+....
+# run as nick, not as root
+sudo dnf install python3-pip
+dnf info ansible-core | grep Version
+# don't run as root
+pip3 install ansible-core==2.14.2
+pip3 install ansible-lint
+....
+
+creates
+~/.local/bin/ansible-lint
+
+installs 
+ansible_lint-6.17.0-py3-none-any.whl (278 kB)
+ansible_core-2.15.0-py3-none-any.whl (2.2 MB)
+and a bunch of others. 
+
+Installs a newer ansible to /home/nick/.local/bin/
+
+Can cause vscode extension "ansible" to error. 
+[source,shell]
+....
+  Command failed: ansible-lint  --offline --nocolor -f codeclimate "/home/nick/ansible/ansible_collections/nick/platform/roles/libvirt_net_public/tasks/main.yml"
+  Ansible CLI (2.14.2) and python module (2.15.0) versions do not match. This indicates a broken execution environment.
+....
+
+versions 
+
+ansible from RPM 
+
+[source,shell]
+....
+[nick@host1 ansible-playbook-aap2-refarch]$ dnf info ansible-core
+Not root, Subscription Management repositories not updated
+Last metadata expiration check: 0:27:49 ago on Sat 10 Jun 2023 12:00:25 BST.
+Installed Packages
+Name         : ansible-core
+Version      : 2.14.2
+...
+[nick@host1 ansible-playbook-aap2-refarch]$ rpm -ql ansible-core | grep bin
+/usr/bin/ansible
+...
+....
+
+ansible from pip3
+
+[source,shell]
+....
+[nick@host1 ansible-playbook-aap2-refarch]$ echo $PATH
+/home/nick/.local/bin:/home/nick/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin
+[nick@host1 ansible-playbook-aap2-refarch]$ 
+[nick@host1 ansible-playbook-aap2-refarch]$ which ansible
+~/.local/bin/ansible
+[nick@host1 ansible-playbook-aap2-refarch]$ ansible --version
+ansible [core 2.15.0]
+...
+....
+
+fix 
+
+[source,shell]
+....
+pip3 uninstall ansible-core
+pip3 install ansible-core==2.14.2
+#pip3 install ansible-lint
+....
+

@@ -2,4 +2,5 @@
 ** xref:why.adoc[]
 ** xref:home-lab.adoc[]
 ** xref:wsl-windows-subsystem-for-linux.adoc[]
+** xref:vscode.adoc[]
 
