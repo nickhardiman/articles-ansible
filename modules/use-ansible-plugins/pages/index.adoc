@@ -4,3 +4,15 @@ Nick Hardiman
 :revdate: 12-10-2021
 
 Write Ansible plugins.
+
+https://docs.ansible.com/ansible/latest/dev_guide/developing_plugins.html
+
+* Action plugins
+* Cache plugins
+* Callback plugins
+* Connection plugins
+* Filter plugins
+* Inventory plugins
+* Lookup plugins
+* Test plugins
+* Vars plugins

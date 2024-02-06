@@ -1,0 +1,12 @@
+= Ansible Lightspeed
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 05-02-2024
+
+A code writing assistant powered by IBM's AI platform.
+Good for writing Anible playbooks.
+
+Limited functions for free, or pay subscription.
+
+
+== links 

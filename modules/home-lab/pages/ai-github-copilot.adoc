@@ -1,0 +1,14 @@
+= Github Copilot
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 05-02-2024
+
+A code writing assistant powered by Github's AI platform.
+Good for writing Anible playbooks.
+
+Sign up for free trial then pay subscription.
+
+
+== links 
+
+https://github.com/features/copilot

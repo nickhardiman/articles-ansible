@@ -28,6 +28,14 @@ https://github.com/ssato/ansible-lint-custom-
 
 https://developers.redhat.com/articles/2023/08/28/how-ansible-lint-improves-playbook-debugging
 
+https://www.ansible.com/blog/creating-custom-rules-for-ansible-lint
+https://ansible.readthedocs.io/projects/lint/configuring/#ansible-lint-configuration
+
+https://ansible.readthedocs.io/projects/lint/rules/var-naming/
+
+https://ansible.readthedocs.io/projects/lint/usage/#using-commands
+
+https://github.com/ssato/ansible-lint-custom-rules/blob/master/rules/BlockedModules.py
 
 == install with pip
 

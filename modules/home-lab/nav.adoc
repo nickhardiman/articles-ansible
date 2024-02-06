@@ -3,4 +3,6 @@
 ** xref:home-lab.adoc[]
 ** xref:wsl-windows-subsystem-for-linux.adoc[]
 ** xref:vscode.adoc[]
+** xref:ai-github-copilot.adoc[]
+** xref:ai-ansible-lightspeed.adoc[]
 
