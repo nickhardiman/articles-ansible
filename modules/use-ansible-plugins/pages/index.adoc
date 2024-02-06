@@ -3,7 +3,7 @@ Nick Hardiman
 :source-highlighter: highlight.js
 :revdate: 12-10-2021
 
-Write Ansible plugins.
+Use Ansible plugins.
 
 https://docs.ansible.com/ansible/latest/dev_guide/developing_plugins.html
 
