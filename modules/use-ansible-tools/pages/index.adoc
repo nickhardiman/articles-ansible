@@ -3,31 +3,39 @@ Nick Hardiman
 :source-highlighter: highlight.js
 :revdate: 12-10-2021
 
-Use ansible tools. 
+Use ansible tools.
 
 The _ansible_ package installs a bunch of utilities in /usr/bin/. 
 
 This list includes both user tools and developer tools.
 
-. ansible             
-. ansible-builder     
-. ansible-compat
-. ansible-config      
+common user tools
+
+. https://docs.ansible.com/ansible/latest/cli/ansible-galaxy.html[ansible-galaxy] manages content collections
+. https://docs.ansible.com/ansible/latest/cli/ansible-playbook.html[ansible-playbook] runs playbooks on a control node and pushes code to managed nodes
+. https://docs.ansible.com/ansible/latest/cli/ansible-vault.html[ansible-vault] for storing encrypted secrets
+
+more user tools
+
+. https://docs.ansible.com/ansible/latest/cli/ansible.html[ansible] for one-liner commands
+. https://docs.ansible.com/ansible/latest/cli/ansible-config.html[ansible-config] for displaying configuration settings
+. https://docs.ansible.com/ansible/latest/cli/ansible-console.html[ansible-console] provides a shell to run commands   
+. https://docs.ansible.com/ansible/latest/cli/ansible-doc.html[ansible-doc] for code explanations and examples
+. https://docs.ansible.com/ansible/latest/cli/ansible-inventory.html[ansible-inventory] to display hosts, along with their groups and variables 
+. https://docs.ansible.com/ansible/latest/cli/ansible-pull.html[ansible-pull] runs on managed nodes and pulls playbooks, rather than the ansible-playbook push from a control node
+
+developer tools
+
+. https://ansible.readthedocs.io/projects/builder/en/latest/[ansible-builder]     
+. https://github.com/ansible/ansible-compat[ansible-compat] is a Python library to help with older Ansible versions 
 . ansible-connection  
-. ansible-console    
 . ansible-creator 
 . ansible-dev-environment
-. ansible-doc         
-. ansible-galaxy      
-. ansible-inventory   
 . https://github.com/ansible-community/ansible-lint[ansible-lint]        
 . https://github.com/ansible/ansible-navigator[ansible-navigator]   
 . https://github.com/ansible/ansible-language-server[ansible-language-server]
-. ansible-playbook    
-. https://docs.ansible.com/ansible/latest/cli/ansible-pull.html[ansible-pull]        
 . ansible-runner
 . ansible-test
-. ansible-vault
 . creator-ee
 . https://github.com/ansible-community/molecule[molecule]
 . pytest-ansible
