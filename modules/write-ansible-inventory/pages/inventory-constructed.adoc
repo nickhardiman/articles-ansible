@@ -1,0 +1,14 @@
+= create a constructed inventory
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 07-08-2024
+
+
+== links
+
+
+description
+https://github.com/AlanCoding/Ansible-inventory-file-examples/blob/master/issues/AWX371/README.md
+
+example
+https://github.com/AlanCoding/Ansible-inventory-file-examples/blob/master/issues/AWX371/construct.yml
